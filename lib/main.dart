@@ -14,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  final String url = "https://swapi.co/api/people";
+  final String url = "http://liveism.xyz/fetch.php";
   List data;
 
   @override
@@ -33,7 +33,8 @@ class HomePageState extends State<HomePage> {
     print(response.body);
     setState((){
       var convertDataToJson=json.decode(response.body);
-      data=convertDataToJson['results'];
+      print(convertDataToJson);
+      data=convertDataToJson;
     });
     return "Success";
   }
@@ -46,7 +47,6 @@ class HomePageState extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Image.asset('assets/iitism.png',fit:BoxFit.contain,height: 40.0,),
-            
             Padding(
               padding: const EdgeInsets.only(top:10.0,left:5.0),
               child: Column(
@@ -56,6 +56,20 @@ class HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Padding(padding: const EdgeInsets.only(left:200.0)),
+            PopupMenuButton(
+              elevation: 2.0,
+              itemBuilder: (BuildContext context){
+                return [
+                  PopupMenuItem(
+                    child:Text('ContactUs'),
+                    ),
+                  PopupMenuItem(
+                    child:Text('Help')
+                    ),
+                ];
+              },
+            ),
           ],
         ),
       ),
@@ -63,29 +77,33 @@ class HomePageState extends State<HomePage> {
         itemCount: data==null?0:data.length,
         itemBuilder: (BuildContext context,int index){
           return Container(
+            padding: const EdgeInsets.all(4.0),
             child: Center(
               child: Column(
                  crossAxisAlignment: CrossAxisAlignment.stretch,
                  children: <Widget>[
                    Card(
+                     elevation: 3.0,
+                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0),),
                      child:Container(
-                       child:Column(
-                        children: <Widget>[
-                          Text(data[index]['name']),
-                          Text(data[index]['height']),
-                          Text(data[index]['mass']),
-                          Text(data[index]['hair_color']),
-                          Text(data[index]['skin_color']),
-                          Text(data[index]['eye_color']),
-                          Text(data[index]['birth_year']),
-                          Text(data[index]['gender']),
-                          Text(data[index]['homeworld']),
-                          Column(
-                            children: <Widget>[
-                              Text(data[index]['films'][0]),
-                          ],),
+                       child:Row(
+                         children: <Widget>[
+                           Image.network(data[index]['image']),
+                           Padding(padding: const EdgeInsets.only(left:3.0),),
+                           Column(
+                             children: <Widget>[
+                                Text(data[index]['name']),
+                                Text(data[index]['id']),
+                                Text(data[index]['description']),
+                                Text(data[index]['image']),
+                                Text(data[index]['link']),
+                                Text(data[index]['date']),
                         ],
                        ),
+
+                         ],
+                       ),
+                       
                        padding: const EdgeInsets.all(20.0),
                        ),
 

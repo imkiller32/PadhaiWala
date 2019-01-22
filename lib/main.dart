@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() => runApp(MaterialApp(
       home: HomePage(),
@@ -21,6 +22,28 @@ class HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     this.getJsonData();
+  }
+
+  void showName(String value) {
+    Fluttertoast.showToast(
+      msg: value.toUpperCase(),
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.white,
+      textColor: Colors.black,
+    );
+  }
+
+  void showDes(String value) {
+    Fluttertoast.showToast(
+      msg: value.toUpperCase(),
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIos: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+    );
   }
 
   Future<String> getJsonData() async {
@@ -68,20 +91,29 @@ class HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            Padding(padding: const EdgeInsets.only(left: 200.0)),
-            PopupMenuButton(
-              elevation: 2.0,
-              itemBuilder: (BuildContext context) {
-                return [
-                  PopupMenuItem(
-                    child: Text('ContactUs'),
-                  ),
-                  PopupMenuItem(child: Text('Help')),
-                ];
-              },
-            ),
           ],
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: new Icon(Icons.search),
+            onPressed: () {showName('Search');},
+          ),
+          PopupMenuButton(
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem(
+                  child: Text('ContactUs'),
+                  value: 'ContactUs',
+                ),
+                PopupMenuItem(
+                  child: Text('Help'),
+                  value: 'Help',
+                ),
+              ];
+            },
+            onSelected: showName,
+          ),
+        ],
       ),
       body: ListView.builder(
         itemCount: data == null ? 0 : data.length,
@@ -92,78 +124,113 @@ class HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Card(
-                    elevation: 3.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Container(
-                      child: Row(
-                        children: <Widget>[
-                          Image.network(
-                            data[index]['image'],
-                            width: 100.0,
-                            height: 100.0,
-                          ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(left: 3.0, right: 10.0),
-                          ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                  GestureDetector(
+                    onTap: () {
+                      showName(data[index]['name']);
+                    },
+                    onLongPress: () {
+                      showDes(data[index]['description']);
+                    },
+                    child: Card(
+                      elevation: 3.0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      child: Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(3.0),
+                            ),
+                            Row(
+                              //mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Container(
-                                  margin: const EdgeInsets.only(right: 10.0),
-                                  child: Text(
-                                    data[index]['name']
-                                        .toString()
-                                        .toUpperCase(),
-                                    style: TextStyle(
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
+                                  margin: const EdgeInsets.only(
+                                      top: 10.0,
+                                      left: 15.0,
+                                      right: 10.0,
+                                      bottom: 5.0),
+                                  child: Image.network(
+                                    data[index]['image'],
+                                    width: 100.0,
+                                    height: 100.0,
                                   ),
                                 ),
-                                Container(
-                                  margin: const EdgeInsets.only(right: 10.0,top: 10.0),
-                                  child: Text(
-                                    data[index]['description'],
-                                    style: TextStyle(
-                                      fontSize: 15.0,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 3.0, right: 10.0),
                                 ),
-                                /*Container(
-                                  margin: const EdgeInsets.only(right: 10.0),
-                                  child: Text(
-                                    data[index]['link'],
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),*/
-                                Container(
-                                  margin: const EdgeInsets.only(right: 10.0,top:7.0),
-                                  child: Text(
-                                    "Uploaded on : "+data[index]['date'],
-                                    style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 10.0),
+                                        child: Text(
+                                          data[index]['name']
+                                              .toString()
+                                              .toUpperCase(),
+                                          style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            right: 10.0, top: 10.0),
+                                        child: Text(
+                                          data[index]['description'],
+                                          style: TextStyle(
+                                            fontSize: 15.0,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            right: 10.0, top: 7.0),
+                                        child: Text(
+                                          "Uploaded on : " +
+                                              data[index]['date'],
+                                          style: TextStyle(
+                                            color: Colors.blueAccent,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
                             ),
-                          ),
-                        ],
+                            //Padding(padding: const EdgeInsets.all(9.0)),
+                            ButtonTheme.bar(
+                              child: ButtonBar(
+                                children: <Widget>[
+                                  FlatButton(
+                                    child: Text('View'),
+                                    onPressed: () {showName('View');},
+                                  ),
+                                  FlatButton(
+                                    child: Text('Download'),
+                                    onPressed: () {showName('Download');},
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      padding: const EdgeInsets.all(20.0),
                     ),
                   ),
                 ],

@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'utils.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 
 import 'contact_us.dart';
 import 'help.dart';
@@ -225,7 +224,7 @@ class HomePageState extends State<HomePage> {
                                   FlatButton(
                                     child: Text('Download'),
                                     onPressed: () {
-                                      showName(data[index]['link']);
+                                      Downloadbar(data[index]['link'],context);
                                     },
                                   ),
                                 ],

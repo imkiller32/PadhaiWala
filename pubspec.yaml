@@ -21,6 +21,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   http: any
   fluttertoast: ^2.2.6
+  flutter_pdf_viewer: ^0.0.6
 
 dev_dependencies:
   flutter_test:

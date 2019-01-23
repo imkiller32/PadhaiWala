@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'contact_us.dart';
+import 'help.dart';
+import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 
 void main() => runApp(MaterialApp(
       home: HomePage(),
@@ -46,6 +49,12 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  void jump(String value){
+    if(value =='ContactUs')
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUs()),);
+    else if(value =='Help')
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Help()),);
+  }
   Future<String> getJsonData() async {
     var response = await http.get(
         //encode the url
@@ -95,7 +104,7 @@ class HomePageState extends State<HomePage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: new Icon(Icons.search),
+            icon: Icon(Icons.search),
             onPressed: () {showName('Search');},
           ),
           PopupMenuButton(
@@ -111,7 +120,7 @@ class HomePageState extends State<HomePage> {
                 ),
               ];
             },
-            onSelected: showName,
+            onSelected: jump,
           ),
         ],
       ),

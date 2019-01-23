@@ -2,10 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+
 import 'contact_us.dart';
 import 'help.dart';
-import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 
 void main() => runApp(MaterialApp(
       home: HomePage(),
@@ -27,34 +29,19 @@ class HomePageState extends State<HomePage> {
     this.getJsonData();
   }
 
-  void showName(String value) {
-    Fluttertoast.showToast(
-      msg: value.toUpperCase(),
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIos: 1,
-      backgroundColor: Colors.white,
-      textColor: Colors.black,
-    );
+  void jump(String value) {
+    if (value == 'ContactUs')
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ContactUs()),
+      );
+    else if (value == 'Help')
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Help()),
+      );
   }
 
-  void showDes(String value) {
-    Fluttertoast.showToast(
-      msg: value.toUpperCase(),
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIos: 1,
-      backgroundColor: Colors.black,
-      textColor: Colors.white,
-    );
-  }
-
-  void jump(String value){
-    if(value =='ContactUs')
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactUs()),);
-    else if(value =='Help')
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>Help()),);
-  }
   Future<String> getJsonData() async {
     var response = await http.get(
         //encode the url
@@ -105,7 +92,9 @@ class HomePageState extends State<HomePage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {showName('Search');},
+            onPressed: () {
+              showName('Search');
+            },
           ),
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
@@ -228,11 +217,16 @@ class HomePageState extends State<HomePage> {
                                 children: <Widget>[
                                   FlatButton(
                                     child: Text('View'),
-                                    onPressed: () {showName('View');},
+                                    onPressed: () {
+                                      openUrl(data[index]['link'],
+                                          data[index]['name']);
+                                    },
                                   ),
                                   FlatButton(
                                     child: Text('Download'),
-                                    onPressed: () {showName('Download');},
+                                    onPressed: () {
+                                      showName(data[index]['link']);
+                                    },
                                   ),
                                 ],
                               ),

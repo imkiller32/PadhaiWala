@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'utils.dart';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 
 import 'contact_us.dart';
@@ -21,6 +23,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   final String url = "http://liveism.xyz/fetch.php";
   List data;
+  List<double> progress=[];
 
   @override
   void initState() {
@@ -41,6 +44,18 @@ class HomePageState extends State<HomePage> {
       );
   }
 
+  Future<void> check(String link, String id, int index) async {
+    Dio dio = Dio();
+    var dir = await getApplicationDocumentsDirectory();
+    await dio.download(link, "${dir.path}/" + id + ".pdf",
+        onProgress: (rec, total) {
+          showName("${dir.path}/" + id + ".pdf");
+      setState(() {
+        progress[index] = (rec / total);
+      });
+    });
+  }
+
   Future<String> getJsonData() async {
     var response = await http.get(
         //encode the url
@@ -48,10 +63,14 @@ class HomePageState extends State<HomePage> {
         //only accept json
         headers: {"Accept": "application/json"});
     print(response.body);
+    var convertDataToJson = json.decode(response.body);
+    print(convertDataToJson);
+    data = convertDataToJson;
+    int len = data.length;
     setState(() {
-      var convertDataToJson = json.decode(response.body);
-      print(convertDataToJson);
-      data = convertDataToJson;
+      for (int i = 0; i < len; i++) {
+        progress.add(0);
+      }
     });
     return "Success";
   }
@@ -131,7 +150,7 @@ class HomePageState extends State<HomePage> {
                     child: Card(
                       elevation: 3.0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
+                        borderRadius: BorderRadius.circular(4.0),
                       ),
                       child: Container(
                         child: Column(
@@ -224,12 +243,14 @@ class HomePageState extends State<HomePage> {
                                   FlatButton(
                                     child: Text('Download'),
                                     onPressed: () {
-                                      Downloadbar(data[index]['link'],context);
+                                      check(data[index]['link'],
+                                          data[index]['id'], index);
                                     },
                                   ),
                                 ],
                               ),
                             ),
+                            LinearProgressIndicator(value: (progress[index]==null)?0:progress[index]),
                           ],
                         ),
                       ),

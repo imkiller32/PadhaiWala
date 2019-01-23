@@ -23,6 +23,8 @@ dependencies:
   fluttertoast: ^2.2.6
   flutter_webview_plugin: ^0.3.0
   url_launcher: ^4.1.0+1
+  dio: any
+  path_provider: any
 
 dev_dependencies:
   flutter_test:

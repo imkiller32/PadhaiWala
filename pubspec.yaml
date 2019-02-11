@@ -1,4 +1,4 @@
-name: dummy
+name: iitism2k16
 description: A new Flutter project.
 
 # The following defines the version and build number for your application.
@@ -21,7 +21,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   http: any
   fluttertoast: ^2.2.6
-  flutter_webview_plugin: ^0.3.0
+  flutter_webview_plugin: ^0.3.0+2
   url_launcher: ^4.1.0+1
   dio: any
   path_provider: any

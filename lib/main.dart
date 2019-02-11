@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'contact_us.dart';
 import 'help.dart';
 
+
 void main() => runApp(MaterialApp(
       home: HomePage(),
       debugShowCheckedModeBanner: false,
@@ -148,9 +149,9 @@ class HomePageState extends State<HomePage> {
                       showDes(data[index]['description']);
                     },
                     child: Card(
-                      elevation: 3.0,
+                      elevation: 7.0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0),
+                        borderRadius: BorderRadius.circular(9.0),
                       ),
                       child: Container(
                         child: Column(

@@ -25,6 +25,7 @@ dependencies:
   url_launcher: ^4.1.0+1
   dio: any
   path_provider: any
+  cached_network_image: ^0.6.0+1
 
 dev_dependencies:
   flutter_test:

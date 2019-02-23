@@ -6,7 +6,7 @@ import 'utils.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+//import "package:pull_to_refresh/pull_to_refresh.dart";
 //import 'package:fluttertoast/fluttertoast.dart';
 
 import 'contact_us.dart';
@@ -146,7 +146,7 @@ class HomePageState extends State<HomePage> {
                 data.removeAt(index);
               });
               Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text(data[index]['name'].toUpperCase() + ' deleted '),
+                content: Text(data[index]['name'].toUpperCase() + ' Deleted '),
                 backgroundColor: Colors.black,
                 duration: Duration(seconds: 3),
                 action: SnackBarAction(
@@ -196,12 +196,12 @@ class HomePageState extends State<HomePage> {
                                         bottom: 5.0),
                                     child: CachedNetworkImage(
                                       imageUrl: data[index]['image'],
+                                      width: 100.0,
+                                      height: 100.0,
                                       placeholder: (context, url) =>
                                           CircularProgressIndicator(),
                                       errorWidget: (context, url, error) =>
                                           Icon(Icons.error),
-                                      width: 100.0,
-                                      height: 100.0,
                                     ),
                                   ),
                                   Padding(

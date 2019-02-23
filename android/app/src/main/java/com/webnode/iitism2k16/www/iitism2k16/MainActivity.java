@@ -1,4 +1,4 @@
-package com.example.dummy;
+package com.webnode.iitism2k16.www.iitism2k16;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

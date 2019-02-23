@@ -15,7 +15,17 @@ void showDes(String value) {
     textColor: Colors.white,
   );
 }
-
+ Widget stackBehindDismiss() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.lightBlue,
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
+  }
 void showName(String value) {
   Fluttertoast.showToast(
     msg: value.toUpperCase(),

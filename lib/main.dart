@@ -1,12 +1,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'utils.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-//import "package:pull_to_refresh/pull_to_refresh.dart";
+import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'search.dart';
+import 'module.dart';
+//import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
+// import 'package:open_file/open_file.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 
 import 'contact_us.dart';
@@ -26,11 +32,12 @@ class HomePageState extends State<HomePage> {
   final String url = "http://liveism.xyz/fetch.php";
   List data;
   List<double> progress = [];
-
+  Module module;
   @override
   void initState() {
+    module = Module();
     super.initState();
-    this.getJsonData();
+    this.getData();
   }
 
   void jump(String value) {
@@ -48,28 +55,35 @@ class HomePageState extends State<HomePage> {
 
   Future<void> check(String link, String id, int index) async {
     Dio dio = Dio();
-    var dir = await getExternalStorageDirectory();
-    showName("${dir.path}/" + id + ".pdf");
-    print("${dir.path}/" + id + ".pdf");
-    await dio.download(link, "${dir.path}/" + id + ".pdf",
-        onProgress: (rec, total) {
-      //showName("${dir.path}/" + id + ".pdf");
+    var dir = await getApplicationDocumentsDirectory();
+    String loc = "${dir.path}/" + id + ".pdf";
+    showName(loc);
+    print(loc);
+
+    void test() async {
+      final file = File(loc);
+      //String filePath = await FilePicker.getFilePath(type: FileType.ANY);
+      DateTime t = await file.lastModified();
+      print(t);
+      // await OpenFile.open(loc);
+      windowUrl(loc, context);
+    }
+
+    await dio.download(link, loc, onProgress: (rec, total) {
       setState(() {
         progress[index] = (rec / total);
       });
-    });
+    }).whenComplete(test);
+    showName(loc);
+    // try {
+    //   openUrl(loc, id);
+    // } catch (e) {
+    //   showName('error->' + e);
+    // }
   }
 
-  Future<String> getJsonData() async {
-    var response = await http.get(
-        //encode the url
-        Uri.encodeFull(url),
-        //only accept json
-        headers: {"Accept": "application/json"});
-    print(response.body);
-    var convertDataToJson = json.decode(response.body);
-    print(convertDataToJson);
-    data = convertDataToJson;
+  Future<String> getData() async {
+    data = await module.getJsonData(url);
     int len = data.length;
     setState(() {
       for (int i = 0; i < len; i++) {
@@ -115,7 +129,7 @@ class HomePageState extends State<HomePage> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              showName('Search');
+              showSearch(context: context, delegate: DataSearch(data));
             },
           ),
           PopupMenuButton(
@@ -135,166 +149,176 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: data == null ? 0 : data.length,
-        itemBuilder: (BuildContext context, int index) {
-          return Dismissible(
-            key: ObjectKey(data[index]['id']),
-            onDismissed: (direction) {
-              var toDelete = data.elementAt(index);
-              setState(() {
-                data.removeAt(index);
-              });
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text(data[index]['name'].toUpperCase() + ' Deleted '),
-                backgroundColor: Colors.black,
-                duration: Duration(seconds: 3),
-                action: SnackBarAction(
-                  label: 'Undo',
-                  onPressed: () {
-                    setState(() {
-                      data.insert(index, toDelete);
-                    });
-                  },
-                ),
-              ));
-            },
-            background: stackBehindDismiss(),
-            child: Container(
-              padding: const EdgeInsets.all(4.0),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: () {
-                        showName(data[index]['name']);
-                      },
-                      onLongPress: () {
-                        showDes(data[index]['description']);
-                      },
-                      child: Card(
-                        elevation: 7.0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(9.0),
-                        ),
-                        child: Container(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(3.0),
-                              ),
-                              Row(
-                                //mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(
-                                    margin: const EdgeInsets.only(
-                                        top: 10.0,
-                                        left: 15.0,
-                                        right: 10.0,
-                                        bottom: 5.0),
-                                    child: CachedNetworkImage(
-                                      imageUrl: data[index]['image'],
-                                      width: 100.0,
-                                      height: 100.0,
-                                      placeholder: (context, url) =>
-                                          CircularProgressIndicator(),
-                                      errorWidget: (context, url, error) =>
-                                          Icon(Icons.error),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 3.0, right: 10.0),
-                                  ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              right: 10.0),
-                                          child: Text(
-                                            data[index]['name']
-                                                .toString()
-                                                .toUpperCase(),
-                                            style: TextStyle(
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              right: 10.0, top: 10.0),
-                                          child: Text(
-                                            data[index]['description'],
-                                            style: TextStyle(
-                                              fontSize: 15.0,
-                                            ),
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Container(
-                                          margin: const EdgeInsets.only(
-                                              right: 10.0, top: 7.0),
-                                          child: Text(
-                                            "Uploaded on : " +
-                                                data[index]['date'],
-                                            style: TextStyle(
-                                              color: Colors.blueAccent,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                            maxLines: 3,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              //Padding(padding: const EdgeInsets.all(9.0)),
-                              ButtonTheme.bar(
-                                child: ButtonBar(
+      body: SmartRefresher(
+        enablePullDown: true,
+        //onRefresh: onRefresh(bool down),
+        //enablePullUp: true,
+        child: ListView.builder(
+          itemCount: data == null ? 0 : data.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Dismissible(
+              key: ObjectKey(data[index]['id']),
+              onDismissed: (direction) {
+                var toDelete = data.elementAt(index);
+                setState(() {
+                  data.removeAt(index);
+                });
+                Scaffold.of(context).showSnackBar(SnackBar(
+                  content:
+                      Text(data[index]['name'].toUpperCase() + ' Deleted '),
+                  backgroundColor: Colors.black,
+                  duration: Duration(seconds: 3),
+                  action: SnackBarAction(
+                    label: 'Undo',
+                    textColor: Colors.blue,
+                    onPressed: () {
+                      timer:
+                      Timer(Duration(seconds: 1), () {
+                        setState(() {
+                          data.insert(index, toDelete);
+                        });
+                      });
+                    },
+                  ),
+                ));
+              },
+              background: stackBehindDismiss(),
+              child: Container(
+                padding: const EdgeInsets.all(4.0),
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      GestureDetector(
+                        onTap: () {
+                          showName(data[index]['name']);
+                        },
+                        onLongPress: () {
+                          showDes(data[index]['description']);
+                        },
+                        child: Card(
+                          elevation: 7.0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(9.0),
+                          ),
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(3.0),
+                                ),
+                                Row(
+                                  //mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
-                                    FlatButton(
-                                      child: Text('View'),
-                                      onPressed: () {
-                                        openUrl(data[index]['link'],
-                                            data[index]['name']);
-                                      },
+                                    Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 10.0,
+                                          left: 15.0,
+                                          right: 10.0,
+                                          bottom: 5.0),
+                                      child: CachedNetworkImage(
+                                        imageUrl: data[index]['image'],
+                                        width: 100.0,
+                                        height: 100.0,
+                                        placeholder: (context, url) =>
+                                            CircularProgressIndicator(),
+                                        errorWidget: (context, url, error) =>
+                                            Icon(Icons.error),
+                                      ),
                                     ),
-                                    FlatButton(
-                                      child: Text('Download'),
-                                      onPressed: () {
-                                        check(data[index]['link'],
-                                            data[index]['id'], index);
-                                      },
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 3.0, right: 10.0),
+                                    ),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                right: 10.0),
+                                            child: Text(
+                                              data[index]['name']
+                                                  .toString()
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                fontSize: 20.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                right: 10.0, top: 10.0),
+                                            child: Text(
+                                              data[index]['description'],
+                                              style: TextStyle(
+                                                fontSize: 15.0,
+                                              ),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                right: 10.0, top: 7.0),
+                                            child: Text(
+                                              "Uploaded on : " +
+                                                  data[index]['date'],
+                                              style: TextStyle(
+                                                color: Colors.blueAccent,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                              maxLines: 3,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              LinearProgressIndicator(
-                                  value: (progress[index] == null)
-                                      ? 0
-                                      : progress[index]),
-                            ],
+                                //Padding(padding: const EdgeInsets.all(9.0)),
+                                ButtonTheme.bar(
+                                  child: ButtonBar(
+                                    children: <Widget>[
+                                      FlatButton(
+                                        child: Text('View'),
+                                        onPressed: () {
+                                          openUrl(data[index]['link'],
+                                              data[index]['name']);
+                                        },
+                                      ),
+                                      FlatButton(
+                                        child: Text('Download'),
+                                        onPressed: () {
+                                          // check(data[index]['link'],
+                                          //     data[index]['id'], index);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                LinearProgressIndicator(
+                                    value: (progress[index] == null)
+                                        ? 0
+                                        : progress[index]),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

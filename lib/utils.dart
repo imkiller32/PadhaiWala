@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:dio/dio.dart';
-import 'package:path_provider/path_provider.dart';
 
 void showDes(String value) {
   Fluttertoast.showToast(
@@ -15,17 +13,19 @@ void showDes(String value) {
     textColor: Colors.white,
   );
 }
- Widget stackBehindDismiss() {
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.only(right: 20.0),
-      color: Colors.lightBlue,
-      child: Icon(
-        Icons.delete,
-        color: Colors.white,
-      ),
-    );
-  }
+
+Widget stackBehindDismiss() {
+  return Container(
+    alignment: Alignment.centerRight,
+    padding: EdgeInsets.only(right: 20.0),
+    color: Colors.lightBlue,
+    child: Icon(
+      Icons.delete,
+      color: Colors.white,
+    ),
+  );
+}
+
 void showName(String value) {
   Fluttertoast.showToast(
     msg: value.toUpperCase(),
@@ -71,7 +71,6 @@ void DownloadBar(String link, context, String id) {
           title: Text('Downloading...'),
           content: Row(
             children: <Widget>[
-               
               CircularProgressIndicator(),
               Text(" %"),
             ],

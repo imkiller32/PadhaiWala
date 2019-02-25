@@ -55,7 +55,7 @@ class ContactPage extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: Text(
-                  'Facebook Page',
+                  'Facebook',
                   textAlign: TextAlign.left,
                   style: TextStyle(color: Colors.black),
                 ),

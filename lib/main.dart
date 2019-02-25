@@ -30,6 +30,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final String url = "http://liveism.xyz/fetch.php";
+  final String playStoreLink =
+      "https://play.google.com/store/apps/details?id=com.webnode.iitism2k16.www.iitism2k16";
   List data;
   List<double> progress = [];
   Module module;
@@ -51,6 +53,7 @@ class HomePageState extends State<HomePage> {
         context,
         MaterialPageRoute(builder: (context) => Help()),
       );
+    else if (value == 'RateUs') openUrl(playStoreLink, 'RateUs');
   }
 
   Future<void> check(String link, String id, int index) async {
@@ -136,12 +139,16 @@ class HomePageState extends State<HomePage> {
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
-                  child: Text('ContactUs'),
+                  child: Text('Contact Us'),
                   value: 'ContactUs',
                 ),
                 PopupMenuItem(
                   child: Text('Help'),
                   value: 'Help',
+                ),
+                PopupMenuItem(
+                  child: Text('Rate Us'),
+                  value: 'RateUs',
                 ),
               ];
             },
@@ -157,6 +164,8 @@ class HomePageState extends State<HomePage> {
           itemCount: data == null ? 0 : data.length,
           itemBuilder: (BuildContext context, int index) {
             return Dismissible(
+              direction: DismissDirection.endToStart,
+              resizeDuration: Duration(milliseconds: 1000),
               key: ObjectKey(data[index]['id']),
               onDismissed: (direction) {
                 var toDelete = data.elementAt(index);
@@ -191,10 +200,15 @@ class HomePageState extends State<HomePage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          showName(data[index]['name']);
+                          // showName(data[index]['name']);
+                          openUrl(data[index]['link'], data[index]['name']);
+                        },
+                        onDoubleTap: () {
+                          showDes(data[index]['name']);
                         },
                         onLongPress: () {
-                          showDes(data[index]['description']);
+                          // showDes(data[index]['description']);
+                          showOptions(data[index], context);
                         },
                         child: Card(
                           elevation: 7.0,
@@ -286,13 +300,13 @@ class HomePageState extends State<HomePage> {
                                 ButtonTheme.bar(
                                   child: ButtonBar(
                                     children: <Widget>[
-                                      FlatButton(
-                                        child: Text('View'),
-                                        onPressed: () {
-                                          openUrl(data[index]['link'],
-                                              data[index]['name']);
-                                        },
-                                      ),
+                                      // FlatButton(
+                                      //   child: Text('View'),
+                                      //   onPressed: () {
+                                      //     openUrl(data[index]['link'],
+                                      //         data[index]['name']);
+                                      //   },
+                                      // ),
                                       FlatButton(
                                         child: Text('Download'),
                                         onPressed: () {
@@ -303,10 +317,10 @@ class HomePageState extends State<HomePage> {
                                     ],
                                   ),
                                 ),
-                                LinearProgressIndicator(
-                                    value: (progress[index] == null)
-                                        ? 0
-                                        : progress[index]),
+                                // LinearProgressIndicator(
+                                //     value: (progress[index] == null)
+                                //         ? 0
+                                //         : progress[index]),
                               ],
                             ),
                           ),

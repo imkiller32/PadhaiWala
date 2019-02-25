@@ -15,6 +15,7 @@ class DataSearch extends SearchDelegate<String> {
     // for (int i = 0; i < len / 5; i++) recentNames.add((data[i]['name']).toString().toUpperCase());
     print(names);
   }
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -43,48 +44,62 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Card(
-      color: Colors.red,
-      shape: StadiumBorder(),
-      child: Center(
-        child: Text(query),
-      ),
-    );
+    return buildSuggestions(context);
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    
     final suggestionList = query.isEmpty
         ? data
-        : data.where((p) => p['name'].startsWith(query)).toList();
+        : data.where((p) => p['name'].contains(query.toLowerCase())).toList();
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(
+            //contentPadding: EdgeInsets.all(2.0),
             onTap: () {
-              openUrl(data[index]['link'], data[index]['name']);
+              openUrl(
+                  suggestionList[index]['link'], suggestionList[index]['name']);
               // showResults(context);
             },
+            onLongPress: () {
+              showOptions(suggestionList[index], context);
+            },
             leading: CachedNetworkImage(
-              imageUrl: data[index]['image'],
+              imageUrl: suggestionList[index]['image'],
               width: 40.0,
               height: 40.0,
-              placeholder: (context, url) => CircularProgressIndicator(),
+              placeholder: (context, url) => CircularProgressIndicator(
+                    strokeWidth: 1.0,
+                  ),
               errorWidget: (context, url, error) => Icon(Icons.error),
             ),
             title: RichText(
                 text: TextSpan(
                     text: suggestionList[index]['name']
-                        .substring(0, query.length)
+                        .substring(
+                            0, suggestionList[index]['name'].indexOf(query.toLowerCase()))
                         .toString()
                         .toUpperCase(),
-                    style: TextStyle(
-                        color: Colors.blue, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.black),
                     children: [
                   TextSpan(
                       text: suggestionList[index]['name']
-                          .substring(query.length)
+                          .substring(
+                              suggestionList[index]['name'].indexOf(query.toLowerCase()),
+                              suggestionList[index]['name'].indexOf(query.toLowerCase()) +
+                                  query.length)
                           .toString()
                           .toUpperCase(),
-                      style: TextStyle(color: Colors.grey))
+                      style: TextStyle(
+                          color: Colors.blue, fontWeight: FontWeight.bold)),
+                  TextSpan(
+                      text: suggestionList[index]['name']
+                          .substring(
+                              suggestionList[index]['name'].indexOf(query.toLowerCase()) +
+                                  query.length)
+                          .toString()
+                          .toUpperCase(),
+                      style: TextStyle(color: Colors.black))
                 ])),
           ),
       itemCount: suggestionList.length,

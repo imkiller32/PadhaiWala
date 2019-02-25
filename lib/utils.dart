@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 void showDes(String value) {
@@ -18,11 +19,88 @@ Widget stackBehindDismiss() {
   return Container(
     alignment: Alignment.centerRight,
     padding: EdgeInsets.only(right: 20.0),
-    color: Colors.lightBlue,
+    color: Colors.white,
     child: Icon(
       Icons.delete,
-      color: Colors.white,
+      color: Colors.red,
+      size: 40,
     ),
+  );
+}
+
+void showOptions(notes, context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      // return object of type Dialog
+      return AlertDialog(
+        title: Text(
+          'Details',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+        ),
+        content: Container(
+          child: Column(
+            children: <Widget>[
+              CachedNetworkImage(
+                imageUrl: notes['image'],
+                width: 150.0,
+                height: 150.0,
+                placeholder: (context, url) => CircularProgressIndicator(
+                      strokeWidth: 3.0,
+                    ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+              ),
+              Text(
+                'iitism2k16',
+                style:
+                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+              ),
+              Text(
+                "Type: " + notes['name'].toString().toUpperCase(),
+                style: TextStyle(fontWeight: FontWeight.bold),
+                textAlign: TextAlign.start,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+              ),
+              Text(
+                "Description: " + notes['description'],
+                textAlign: TextAlign.left,
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+              ),
+              Text(
+                "Uploaded On : " + notes['date'],
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          // usually buttons at the bottom of the dialog
+          new FlatButton(
+            child: new Text("View"),
+            onPressed: () {
+              openUrl(notes['link'], notes['name']);
+              Navigator.of(context).pop();
+            },
+          ),
+          new FlatButton(
+            child: new Text("Close"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
   );
 }
 

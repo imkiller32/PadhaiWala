@@ -15,6 +15,26 @@ void showDes(String value) {
   );
 }
 
+showMyDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return new AlertDialog(
+          content: Text(
+            'Message Here',
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      });
+}
+
 Widget stackBehindDismiss() {
   return Container(
     alignment: Alignment.centerRight,
@@ -33,72 +53,74 @@ void showOptions(notes, context) {
     context: context,
     builder: (BuildContext context) {
       // return object of type Dialog
-      return AlertDialog(
-        title: Text(
-          'Details',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+      return SingleChildScrollView(
+              child: AlertDialog(
+          title: Text(
+            'Details',
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+          ),
+          content: Container(
+            child: Column(
+              children: <Widget>[
+                CachedNetworkImage(
+                  imageUrl: notes['image'],
+                  width: 150.0,
+                  height: 150.0,
+                  placeholder: (context, url) => CircularProgressIndicator(
+                        strokeWidth: 3.0,
+                      ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                ),
+                Text(
+                  'iitism2k16',
+                  style:
+                      TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+                ),
+                Text(
+                  "Type: " + notes['name'].toString().toUpperCase(),
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.start,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+                ),
+                Text(
+                  "Description: " + notes['description'],
+                  textAlign: TextAlign.left,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+                ),
+                Text(
+                  "Uploaded On : " + notes['date'],
+                  textAlign: TextAlign.left,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("View"),
+              onPressed: () {
+                openUrl(notes['link'], notes['name']);
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         ),
-        content: Container(
-          child: Column(
-            children: <Widget>[
-              CachedNetworkImage(
-                imageUrl: notes['image'],
-                width: 150.0,
-                height: 150.0,
-                placeholder: (context, url) => CircularProgressIndicator(
-                      strokeWidth: 3.0,
-                    ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-              ),
-              Text(
-                'iitism2k16',
-                style:
-                    TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
-              ),
-              Text(
-                "Type: " + notes['name'].toString().toUpperCase(),
-                style: TextStyle(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.start,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
-              ),
-              Text(
-                "Description: " + notes['description'],
-                textAlign: TextAlign.left,
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
-              ),
-              Text(
-                "Uploaded On : " + notes['date'],
-                textAlign: TextAlign.left,
-              ),
-            ],
-          ),
-        ),
-        actions: <Widget>[
-          // usually buttons at the bottom of the dialog
-          new FlatButton(
-            child: new Text("View"),
-            onPressed: () {
-              openUrl(notes['link'], notes['name']);
-              Navigator.of(context).pop();
-            },
-          ),
-          new FlatButton(
-            child: new Text("Close"),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
       );
     },
   );
@@ -123,17 +145,19 @@ Future<Null> openUrl(link, name) async {
   }
 }
 
-Future windowUrl(link, context) async {
+Future windowUrl(link, value, context) async {
   if (await url_launcher.canLaunch(link)) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => WebviewScaffold(
               initialChild: Center(
                 child: CircularProgressIndicator(),
               ),
+              withZoom: true,
+              scrollBar: true,
               url: link,
               withJavascript: true,
               appBar: AppBar(
-                title: Text(link),
+                title: Text(value),
               ),
             )));
     //showDes("Can be");

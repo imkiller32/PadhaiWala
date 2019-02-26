@@ -49,7 +49,6 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    
     final suggestionList = query.isEmpty
         ? data
         : data.where((p) => p['name'].contains(query.toLowerCase())).toList();
@@ -77,7 +76,9 @@ class DataSearch extends SearchDelegate<String> {
                 text: TextSpan(
                     text: suggestionList[index]['name']
                         .substring(
-                            0, suggestionList[index]['name'].indexOf(query.toLowerCase()))
+                            0,
+                            suggestionList[index]['name']
+                                .indexOf(query.toLowerCase()))
                         .toString()
                         .toUpperCase(),
                     style: TextStyle(color: Colors.black),
@@ -85,8 +86,10 @@ class DataSearch extends SearchDelegate<String> {
                   TextSpan(
                       text: suggestionList[index]['name']
                           .substring(
-                              suggestionList[index]['name'].indexOf(query.toLowerCase()),
-                              suggestionList[index]['name'].indexOf(query.toLowerCase()) +
+                              suggestionList[index]['name']
+                                  .indexOf(query.toLowerCase()),
+                              suggestionList[index]['name']
+                                      .indexOf(query.toLowerCase()) +
                                   query.length)
                           .toString()
                           .toUpperCase(),
@@ -94,9 +97,9 @@ class DataSearch extends SearchDelegate<String> {
                           color: Colors.blue, fontWeight: FontWeight.bold)),
                   TextSpan(
                       text: suggestionList[index]['name']
-                          .substring(
-                              suggestionList[index]['name'].indexOf(query.toLowerCase()) +
-                                  query.length)
+                          .substring(suggestionList[index]['name']
+                                  .indexOf(query.toLowerCase()) +
+                              query.length)
                           .toString()
                           .toUpperCase(),
                       style: TextStyle(color: Colors.black))

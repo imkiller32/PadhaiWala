@@ -8,6 +8,7 @@ import 'utils.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'search.dart';
 import 'module.dart';
@@ -35,9 +36,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       "https://play.google.com/store/apps/details?id=com.webnode.iitism2k16.www.iitism2k16";
   final String upload = "https://liveism.xyz/upload.php";
   AnimationController _controller;
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
 
   static const List<IconData> icons = const [
-    Icons.star,
+    MdiIcons.googlePlay,
     Icons.share,
     Icons.cloud_upload
   ];
@@ -53,7 +55,16 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 500),
     );
     super.initState();
-    this.getData();
+    onRefreshChange();
+  }
+
+  Future<Null> onRefreshChange() async {
+    refreshKey.currentState?.show();
+    await Future.delayed(const Duration(milliseconds: 2000));
+    setState(() {
+      this.getData();
+    });
+    return null;
   }
 
   void jump(String value) {
@@ -166,15 +177,30 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             itemBuilder: (BuildContext context) {
               return [
                 PopupMenuItem(
-                  child: Text('Contact Us'),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.contacts),
+                      Text('  Contact Us'),
+                    ],
+                  ),
                   value: 'ContactUs',
                 ),
                 PopupMenuItem(
-                  child: Text('Help'),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.help),
+                      Text('  Help'),
+                    ],
+                  ),
                   value: 'Help',
                 ),
                 PopupMenuItem(
-                  child: Text('Rate Us'),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(MdiIcons.googlePlay),
+                      Text('  Rate Us'),
+                    ],
+                  ),
                   value: 'RateUs',
                 ),
               ];
@@ -188,9 +214,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         mainAxisSize: MainAxisSize.min,
         children: new List.generate(icons.length, (int index) {
           Widget child = new Container(
-            height: 56.0,
+            height: 60.0,
             width: 56.0,
             alignment: FractionalOffset.topCenter,
+            padding: EdgeInsets.all(4.0),
             child: new ScaleTransition(
               scale: new CurvedAnimation(
                 parent: _controller,
@@ -199,11 +226,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               ),
               child: new FloatingActionButton(
                 heroTag: null,
-                mini: true,
-                backgroundColor: Colors.white,
+                mini: false,
+                backgroundColor: Colors.black,
                 child: new Icon(
                   icons[index],
-                  color: Colors.blue,
+                  color: Colors.white,
                 ),
                 onPressed: () {
                   if (index == 0) {
@@ -276,9 +303,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       //   elevation: 10.0,
       //   color: Colors.white,
       // ),
-      body: SmartRefresher(
-        enablePullDown: true,
-        //onRefresh: onRefresh(bool down),
+      body: RefreshIndicator(
+        key: refreshKey,
+        onRefresh: onRefreshChange,
+
         //enablePullUp: true,
         child: ListView.builder(
           itemCount: data == null ? 0 : data.length,

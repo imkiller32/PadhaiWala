@@ -54,7 +54,7 @@ void showOptions(notes, context) {
     builder: (BuildContext context) {
       // return object of type Dialog
       return SingleChildScrollView(
-              child: AlertDialog(
+        child: AlertDialog(
           title: Text(
             'Details',
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
@@ -76,8 +76,8 @@ void showOptions(notes, context) {
                 ),
                 Text(
                   'iitism2k16',
-                  style:
-                      TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.blue),
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 5),

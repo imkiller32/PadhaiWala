@@ -28,6 +28,7 @@ dependencies:
   cached_network_image: ^0.6.0
   pull_to_refresh: ^1.1.6
   share: ^0.5.3
+  material_design_icons_flutter: ^3.1.3493
   # advanced_share: ^0.1.0
   # open_file: ^1.2.2+2
 

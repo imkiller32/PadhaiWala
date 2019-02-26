@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'utils.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 void main() => runApp(ContactUs());
 
@@ -16,13 +17,13 @@ class ContactUs extends StatelessWidget {
 }
 
 class ContactPage extends StatelessWidget {
-  var email='iitism2k16@gmail.com';
-  var subject='Re:iitism2k16 1.1.0';
-  var body="";
+  var email = 'iitism2k16@gmail.com';
+  var subject = 'Re:iitism2k16 1.1.0';
+  var body = "";
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-          child: Container(
+      child: Container(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
@@ -39,10 +40,15 @@ class ContactPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Website',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(MdiIcons.googleChrome),
+                      Text(
+                        '   Website',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {
@@ -55,10 +61,15 @@ class ContactPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Facebook',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(MdiIcons.facebook),
+                      Text(
+                        '   Facebook',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {
@@ -71,10 +82,15 @@ class ContactPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Instagram',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(MdiIcons.instagram),
+                      Text(
+                        '   Instagram',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {
@@ -94,14 +110,19 @@ class ContactPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Email Us',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(MdiIcons.gmail),
+                      Text(
+                        '   Email Us',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {
-                  openUrl('mailto:$email?subject=$subject&body=$body','Email');
+                  openUrl('mailto:$email?subject=$subject&body=$body', 'Email');
                 },
               ),
               Divider(
@@ -110,10 +131,15 @@ class ContactPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Location',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.location_on),
+                      Text(
+                        '   Location',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {

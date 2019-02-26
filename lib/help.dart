@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'utils.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 void main() => runApp(Help());
 
@@ -22,7 +23,7 @@ class HelpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-          child: Container(
+      child: Container(
         child: Padding(
           padding: const EdgeInsets.all(25.0),
           child: Column(
@@ -39,10 +40,15 @@ class HelpPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Privacy Policy',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(MdiIcons.laptopChromebook),
+                      Text(
+                        '   Privacy Policy',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {
@@ -56,10 +62,15 @@ class HelpPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Help Centre',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.phone),
+                      Text(
+                        '   Help Centre',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {
@@ -72,10 +83,15 @@ class HelpPage extends StatelessWidget {
               FlatButton(
                 child: SizedBox(
                   width: double.infinity,
-                  child: Text(
-                    'Feedback',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(color: Colors.black),
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.feedback),
+                      Text(
+                        '   Feedback',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
                   ),
                 ),
                 onPressed: () {

@@ -32,12 +32,14 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final String url = "http://liveism.xyz/fetch.php";
+  // final String name = "PadhaiWala";
+  // final String tagLine = "#Be_Updated";
   final String playStoreLink =
       "https://play.google.com/store/apps/details?id=com.webnode.iitism2k16.www.iitism2k16";
   final String upload = "https://liveism.xyz/upload.php";
   AnimationController _controller;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-
+  int selectedBar = 1;
   static const List<IconData> icons = const [
     MdiIcons.googlePlay,
     Icons.share,
@@ -65,6 +67,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       this.getData();
     });
     return null;
+  }
+
+  void navigationJump(int index) {
+    setState(() {
+      selectedBar = index;
+      jump("ContactUs");
+    });
   }
 
   void jump(String value) {
@@ -151,13 +160,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Column(
                 children: <Widget>[
                   Text(
-                    "iitism2k16",
+                    "padhaiWala",
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 19.0,
                     ),
                   ),
                   Text(
-                    "#Be_Updated!",
+                    "#Be_Updated",
                     style:
                         TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
                   ),
@@ -207,6 +216,21 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             },
             onSelected: jump,
           ),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        onTap: navigationJump,
+        //fixedColor: Colors.black,
+
+        currentIndex: selectedBar,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+              icon: Icon(Icons.bookmark), title: Text('Bookmarks')),
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Me')),
+
+          // BottomNavigationBarItem(
+          //     icon: Icon(Icons.school), title: Text('Bookmark')),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

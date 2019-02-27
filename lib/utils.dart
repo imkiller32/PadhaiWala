@@ -55,9 +55,15 @@ void showOptions(notes, context) {
       // return object of type Dialog
       return SingleChildScrollView(
         child: AlertDialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
           title: Text(
-            'Details',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
+            notes['name'].toString().toUpperCase(),
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.blue,
+            ),
           ),
           content: Container(
             child: Column(
@@ -74,18 +80,8 @@ void showOptions(notes, context) {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
                 ),
-                Text(
-                  'iitism2k16',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.blue),
-                ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
-                ),
-                Text(
-                  "Type: " + notes['name'].toString().toUpperCase(),
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.start,
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
@@ -98,7 +94,7 @@ void showOptions(notes, context) {
                   padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
                 ),
                 Text(
-                  "Uploaded On : " + notes['date'],
+                  "Tags : " + notes['date'],
                   textAlign: TextAlign.left,
                 ),
               ],

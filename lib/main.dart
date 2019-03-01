@@ -2,21 +2,15 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import 'dart:io';
-// import 'dart:typed_data';
-import 'package:http/http.dart' as http;
 import 'utils.dart';
 import 'package:dio/dio.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'search.dart';
 import 'module.dart';
 import 'share.dart';
-//import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
-// import 'package:open_file/open_file.dart';
-
 import 'contact_us.dart';
 import 'help.dart';
 
@@ -31,9 +25,12 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  ConnectivityResult connectionStatus = ConnectivityResult.none;
+  ConnectivityResult initialNetworkState = ConnectivityResult.none;
+  var networkStatus = 'Unknown';
+  Connectivity connectivity;
+  StreamSubscription<ConnectivityResult> subscription;
   final String url = "http://liveism.xyz/fetch.php";
-  // final String name = "PadhaiWala";
-  // final String tagLine = "#Be_Updated";
   final String playStoreLink =
       "https://play.google.com/store/apps/details?id=com.webnode.iitism2k16.www.iitism2k16";
   final String upload = "https://liveism.xyz/upload.php";
@@ -47,7 +44,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ];
   List data;
   List<double> progress = [];
-  // List<IconData> love = [];
   Module module;
   @override
   void initState() {
@@ -57,16 +53,56 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 500),
     );
     super.initState();
-    onRefreshChange();
+    connectivity = new Connectivity();
+    subscription =
+        connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+      if (networkStatus == 'Unknown') {
+        initialNetworkState = result;
+        if (initialNetworkState == ConnectivityResult.none) {
+          showInternetDialog(context);
+        }
+        networkStatus = 'Known1';
+      }
+      connectionStatus = result;
+      if (connectionStatus == ConnectivityResult.none) {
+        showDes('No Connection');
+      }
+      if (result == ConnectivityResult.wifi) {
+        //internetDesc(context,'Wifi Network detected');
+        showDes('Wifi Network detected');
+      }
+      if (result == ConnectivityResult.mobile) {
+        //internetDesc(context,'Mobile Network detected');
+        showDes('Mobile Network Detected');
+      }
+      if (result == ConnectivityResult.wifi ||
+          result == ConnectivityResult.mobile) {
+        if (networkStatus == 'Known1') {
+          onRefreshChange();
+          networkStatus = 'Known2';
+        }
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 
   Future<Null> onRefreshChange() async {
-    refreshKey.currentState?.show();
-    await Future.delayed(const Duration(milliseconds: 2000));
-    setState(() {
-      this.getData();
-    });
-    return null;
+    if (ConnectivityResult.none == connectionStatus) {
+      showInternetDialog(context);
+    } else {
+      //networkStatus = 'Known1';
+      refreshKey.currentState?.show();
+      await Future.delayed(const Duration(milliseconds: 2000));
+      setState(() {
+        this.getData();
+      });
+      return null;
+    }
   }
 
   void navigationJump(int index) {
@@ -353,7 +389,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     label: 'Undo',
                     textColor: Colors.blue,
                     onPressed: () {
-                      timer:
                       Timer(Duration(seconds: 1), () {
                         setState(() {
                           data.insert(index, toDelete);
@@ -464,6 +499,44 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           ),
                                         ],
                                       ),
+                                    ),
+                                    PopupMenuButton(
+                                      itemBuilder: (BuildContext context) {
+                                        return [
+                                          PopupMenuItem(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(Icons.report),
+                                                Text(
+                                                  '  Report',
+                                                ),
+                                              ],
+                                            ),
+                                            value: 'Report',
+                                          ),
+                                          PopupMenuItem(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(MdiIcons.share),
+                                                Text('  Share'),
+                                              ],
+                                            ),
+                                            value: 'Share',
+                                          ),
+                                          PopupMenuItem(
+                                            child: Row(
+                                              children: <Widget>[
+                                                Icon(MdiIcons.download),
+                                                Text('  Download'),
+                                              ],
+                                            ),
+                                            value: 'Download',
+                                          ),
+                                        ];
+                                      },
+                                      onSelected: (value) {
+                                        jumpCard(value, data[index], context);
+                                      },
                                     ),
                                   ],
                                 ),

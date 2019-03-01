@@ -17,9 +17,9 @@ class ContactUs extends StatelessWidget {
 }
 
 class ContactPage extends StatelessWidget {
-  var email = 'iitism2k16@gmail.com';
-  var subject = 'Re:iitism2k16 1.1.0';
-  var body = "";
+  final email = 'iitism2k16@gmail.com';
+  final subject = 'Re:iitism2k16 1.1.0';
+  final body = "";
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -31,7 +31,7 @@ class ContactPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
-                'Social Media',
+                'Social',
                 style: TextStyle(fontSize: 16.0, color: Colors.lightBlue),
               ),
               Padding(

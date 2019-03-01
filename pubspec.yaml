@@ -29,6 +29,8 @@ dependencies:
   pull_to_refresh: ^1.1.6
   share: ^0.5.3
   material_design_icons_flutter: ^3.1.3493
+  connectivity: ^0.4.2
+  system_setting: ^0.1.2
   # advanced_share: ^0.1.0
   # open_file: ^1.2.2+2
 
@@ -37,7 +39,12 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  #flutter_launcher_icons: "^0.6.1"
+  flutter_launcher_icons: "^0.6.1"
+
+flutter_icons:
+  image_path: "F:\\projects\\Dummy\\assets\\iitism.png" 
+  android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec

@@ -17,9 +17,9 @@ class Help extends StatelessWidget {
 }
 
 class HelpPage extends StatelessWidget {
-  var email = 'iitism2k16@gmail.com';
-  var subject = 'FeedBack regarding iitism2k16 1.1.0';
-  var body = "";
+  final email = 'iitism2k16@gmail.com';
+  final subject = 'FeedBack regarding iitism2k16 1.1.0';
+  final body = "";
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(

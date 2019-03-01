@@ -10,9 +10,6 @@ class DataSearch extends SearchDelegate<String> {
   List recentNames = [];
   final String url = "http://liveism.xyz/fetch.php";
   DataSearch(this.data) {
-    int len = data.length;
-    // for (int i = 0; i < len; i++) names.add((data[i]['name']).toString().toUpperCase());
-    // for (int i = 0; i < len / 5; i++) recentNames.add((data[i]['name']).toString().toUpperCase());
     print(names);
   }
 

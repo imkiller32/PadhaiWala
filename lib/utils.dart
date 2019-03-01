@@ -3,6 +3,7 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:system_setting/system_setting.dart';
 
 void showDes(String value) {
   Fluttertoast.showToast(
@@ -13,6 +14,110 @@ void showDes(String value) {
     backgroundColor: Colors.black,
     textColor: Colors.white,
   );
+}
+
+void jumpCard(String value, var notes, context) {
+  var email = 'iitism2k16@gmail.com';
+  var subject = 'Re:Report regarding ' + notes['name'];
+  var body = "";
+  if (value == 'Report')
+    openUrl('mailto:$email?subject=$subject&body=$body', 'Email');
+  else if (value == 'Share')
+    showDes(notes['name']);
+  else if (value == 'Download') openUrl(notes['link'], notes['name']);
+}
+
+void internetDesc(BuildContext context, String status) {
+  Scaffold.of(context).showSnackBar(SnackBar(
+    content: Text(status),
+    backgroundColor: Colors.green,
+    duration: Duration(seconds: 2),
+  ));
+}
+
+showInternetDialog(BuildContext context) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: ThemeData.dark(),
+          child: new AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            content: Container(
+              width: double.infinity,
+              height: 160,
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'Your internet is acting up!\nCheck connection',
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 15.0),
+                  ),
+                  FlatButton(
+                    color: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.0)),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        'SETTINGS',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.3,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      SystemSetting.goto(SettingTarget.WIFI);
+                      Navigator.of(context).pop(true);
+                    },
+                  ),
+                  FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(6.0)),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        'CANCEL',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.3,
+                          // decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                  ),
+                ],
+              ),
+            ),
+            // actions: <Widget>[
+            //   FlatButton(
+            //     child: new Text("CANCEL"),
+            //     onPressed: () {
+            //       Navigator.of(context).pop();
+            //     },
+            //   ),
+            // ],
+          ),
+        );
+      });
 }
 
 showMyDialog(BuildContext context) {
@@ -162,7 +267,7 @@ Future windowUrl(link, value, context) async {
   }
 }
 
-void DownloadBar(String link, context, String id) {
+void downloadBar(String link, context, String id) {
   showDialog<String>(
     context: context,
     builder: (BuildContext context) => AlertDialog(

@@ -13,6 +13,7 @@ import 'module.dart';
 import 'share.dart';
 import 'contact_us.dart';
 import 'help.dart';
+import 'login.dart';
 
 void main() => runApp(MaterialApp(
       home: HomePage(),
@@ -108,12 +109,17 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void navigationJump(int index) {
     setState(() {
       selectedBar = index;
-      jump("ContactUs");
+      jump("login");
     });
   }
 
   void jump(String value) {
-    if (value == 'ContactUs')
+    if (value == "login")
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    else if (value == 'ContactUs')
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ContactUs()),
@@ -142,11 +148,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       windowUrl(loc, 'File', context);
     }
 
-    await dio.download(link, loc, onProgress: (rec, total) {
-      setState(() {
-        progress[index] = (rec / total);
-      });
-    }).whenComplete(test);
+    // await dio.download(link, loc, onProgress: (rec, total) {
+    //   setState(() {
+    //     progress[index] = (rec / total);
+    //   });
+    // }).whenComplete(test);
     showName(loc);
     // try {
     //   openUrl(loc, id);
@@ -154,16 +160,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //   showName('error->' + e);
     // }
   }
-
-  // Future<void> onPressedLove(int index) {
-  //   setState(() {
-  //     if (love[index] == Icons.favorite_border) {
-  //       love[index] == Icons.favorite;
-  //     } else {
-  //       love[index] == Icons.favorite_border;
-  //     }
-  //   });
-  // }
 
   Future<String> getData() async {
     //Future.delayed(Duration.zero, () => showMyDialog(context));
@@ -173,7 +169,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     setState(() {
       for (int i = 0; i < len; i++) {
         progress.add(0);
-        //love.add(Icons.favorite_border);
       }
     });
     return "Success";
@@ -196,7 +191,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Column(
                 children: <Widget>[
                   Text(
-                    "padhaiWala",
+                    "iitism2k16",
                     style: TextStyle(
                       fontSize: 19.0,
                     ),
@@ -332,42 +327,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   backgroundColor: Colors.blue,
-      //   foregroundColor: Colors.white,
-      //   onPressed: () {
-      //     onShareTap(context, playStoreLink);
-      //     // openUrl(playStoreLink, 'RateUs');
-      //   },
-      //   //highlightElevation: 10,
-      //   child: Icon(Icons.share),
-      //   // heroTag: "demoValue",
-      // ),
-      // bottomNavigationBar: BottomAppBar(
-      //   child: Row(
-      //     mainAxisSize: MainAxisSize.max,
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: <Widget>[
-      //       IconButton(
-      //         icon: Icon(Icons.menu),
-      //         onPressed: () {},
-      //       ),
-      //       IconButton(
-      //         icon: Icon(Icons.search),
-      //         onPressed: () {},
-      //       ),
-      //     ],
-      //   ),
-      //   shape: CircularNotchedRectangle(),
-      //   notchMargin: 4.0,
-      //   elevation: 10.0,
-      //   color: Colors.white,
-      // ),
       body: RefreshIndicator(
         key: refreshKey,
         onRefresh: onRefreshChange,
-
-        //enablePullUp: true,
         child: ListView.builder(
           itemCount: data == null ? 0 : data.length,
           itemBuilder: (BuildContext context, int index) {
@@ -400,6 +362,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               },
               background: stackBehindDismiss(),
               child: Container(
+                color: Colors.white,
                 padding: const EdgeInsets.all(4.0),
                 child: Center(
                   child: Column(
@@ -417,168 +380,155 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           showOptions(data[index], context);
                         },
                         child: Card(
-                          elevation: 7.0,
+                          clipBehavior: Clip.antiAlias,
+                          elevation: 1.0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(9.0),
                           ),
-                          child: Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.all(3.0),
+                          child: Column(
+                            children: <Widget>[
+                              ListTile(
+                                title: Container(
+                                  margin: const EdgeInsets.only(right: 5.0),
+                                  child: Text(
+                                    data[index]['name']
+                                        .toString()
+                                        .toUpperCase(),
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                                Row(
-                                  //mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10.0,
-                                          left: 15.0,
-                                          right: 10.0,
-                                          bottom: 5.0),
-                                      child: CachedNetworkImage(
-                                        imageUrl: data[index]['image'],
-                                        width: 100.0,
-                                        height: 100.0,
-                                        placeholder: (context, url) =>
-                                            CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) =>
-                                            Icon(Icons.error),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 3.0, right: 10.0),
-                                    ),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                contentPadding: EdgeInsets.only(left: 20),
+                                trailing: IconButton(
+                                  tooltip: 'More Actions',
+                                  icon: Icon(Icons.more_vert),
+                                  onPressed: () {
+                                    settingModalBottomSheet(
+                                        context, data[index]);
+                                  },
+                                ),
+                              ),
+                              Card(
+                                elevation: 0.0,
+                                child: Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    children: <Widget>[
+                                      // Padding(
+                                      //   padding: const EdgeInsets.all(3.0),
+                                      // ),
+                                      Row(
+                                        //mainAxisAlignment: MainAxisAlignment.center,
                                         children: <Widget>[
                                           Container(
                                             margin: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              data[index]['name']
-                                                  .toString()
-                                                  .toUpperCase(),
-                                              style: TextStyle(
-                                                fontSize: 20.0,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 3,
-                                              overflow: TextOverflow.ellipsis,
+                                                top: 0.0,
+                                                left: 15.0,
+                                                right: 10.0,
+                                                bottom: 5.0),
+                                            child: CachedNetworkImage(
+                                              imageUrl: data[index]['image'],
+                                              width: 100.0,
+                                              height: 100.0,
+                                              placeholder: (context, url) =>
+                                                  CircularProgressIndicator(),
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
                                             ),
                                           ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10.0, top: 10.0),
-                                            child: Text(
-                                              data[index]['description'],
-                                              style: TextStyle(
-                                                fontSize: 15.0,
-                                              ),
-                                              maxLines: 3,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 3.0, right: 10.0),
                                           ),
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10.0, top: 7.0),
-                                            child: Text(
-                                              "Uploaded on : " +
-                                                  data[index]['date'],
-                                              style: TextStyle(
-                                                color: Colors.blueAccent,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                              maxLines: 3,
-                                              overflow: TextOverflow.ellipsis,
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10.0, top: 0.0),
+                                                  child: Text(
+                                                    data[index]['description'],
+                                                    style: TextStyle(
+                                                      fontSize: 15.0,
+                                                    ),
+                                                    maxLines: 3,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10.0, top: 7.0),
+                                                  child: Text(
+                                                    "Uploaded on : " +
+                                                        data[index]['date'],
+                                                    style: TextStyle(
+                                                      color: Colors.blueAccent,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    PopupMenuButton(
-                                      itemBuilder: (BuildContext context) {
-                                        return [
-                                          PopupMenuItem(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Icon(Icons.report),
-                                                Text(
-                                                  '  Report',
-                                                ),
-                                              ],
-                                            ),
-                                            value: 'Report',
-                                          ),
-                                          PopupMenuItem(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Icon(MdiIcons.share),
-                                                Text('  Share'),
-                                              ],
-                                            ),
-                                            value: 'Share',
-                                          ),
-                                          PopupMenuItem(
-                                            child: Row(
-                                              children: <Widget>[
-                                                Icon(MdiIcons.download),
-                                                Text('  Download'),
-                                              ],
-                                            ),
-                                            value: 'Download',
-                                          ),
-                                        ];
-                                      },
-                                      onSelected: (value) {
-                                        jumpCard(value, data[index], context);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                //Padding(padding: const EdgeInsets.all(9.0)),
-                                ButtonTheme.bar(
-                                  child: ButtonBar(
-                                    children: <Widget>[
-                                      // FlatButton(
-                                      //   child: Text('View'),
-                                      //   onPressed: () {
-                                      //     openUrl(data[index]['link'],
-                                      //         data[index]['name']);
-                                      //   },
-                                      // ),
 
-                                      // FlatButton.icon(
-                                      //   icon: Icon(love[index]),
-                                      //   onPressed: () {
-                                      //     onPressedLove(index);
-                                      //   },
-                                      //   label: Column(
-                                      //     children: <Widget>[],
-                                      //   ),
-                                      // ),
-//
-                                      FlatButton(
-                                        child: Text('Download'),
-                                        onPressed: () {
-                                          showDes('Added Soon');
-                                          // check(data[index]['link'],
-                                          //     data[index]['id'], index);
-                                        },
-                                      ),
+                                      // LinearProgressIndicator(
+                                      //     value: (progress[index] == null)
+                                      //         ? 0
+                                      //         : progress[index]),
                                     ],
                                   ),
                                 ),
-                                // LinearProgressIndicator(
-                                //     value: (progress[index] == null)
-                                //         ? 0
-                                //         : progress[index]),
-                              ],
-                            ),
+                              ),
+                              Row(
+                                children: <Widget>[
+                                  IconButton(
+                                    onPressed: () {},
+                                    padding: EdgeInsets.only(left: 15),
+                                    icon: Icon(
+                                      Icons.favorite_border,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      MdiIcons.commentOutline,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      MdiIcons.shareOutline,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      MdiIcons.bookmarkOutline,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),

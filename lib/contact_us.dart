@@ -42,7 +42,7 @@ class ContactPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(MdiIcons.googleChrome),
+                      Icon(MdiIcons.googleChrome, color: Colors.orange),
                       Text(
                         '   Website',
                         textAlign: TextAlign.left,
@@ -63,7 +63,7 @@ class ContactPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(MdiIcons.facebook),
+                      Icon(MdiIcons.facebook, color: Colors.blueAccent),
                       Text(
                         '   Facebook',
                         textAlign: TextAlign.left,
@@ -84,7 +84,7 @@ class ContactPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(MdiIcons.instagram),
+                      Icon(MdiIcons.instagram, color: Colors.purple),
                       Text(
                         '   Instagram',
                         textAlign: TextAlign.left,
@@ -112,7 +112,7 @@ class ContactPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(MdiIcons.gmail),
+                      Icon(MdiIcons.gmail, color: Colors.redAccent),
                       Text(
                         '   Email Us',
                         textAlign: TextAlign.left,
@@ -133,7 +133,7 @@ class ContactPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.location_on),
+                      Icon(Icons.location_on, color: Colors.green),
                       Text(
                         '   Location',
                         textAlign: TextAlign.left,

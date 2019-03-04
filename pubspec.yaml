@@ -21,7 +21,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   http: any
   fluttertoast: ^2.2.6
-  flutter_webview_plugin: ^0.3.0+2
+  flutter_webview_plugin: ^0.3.0
   url_launcher: ^4.1.0+1
   dio: any
   path_provider: ^0.5.0+1
@@ -29,8 +29,11 @@ dependencies:
   pull_to_refresh: ^1.1.6
   share: ^0.5.3
   material_design_icons_flutter: ^3.1.3493
-  connectivity: ^0.4.2
+  connectivity: ^0.3.2
   system_setting: ^0.1.2
+  country_code_picker: ^1.1.1
+  flutter_masked_text: ^0.7.0
+  firebase_auth: ^0.6.6
   # advanced_share: ^0.1.0
   # open_file: ^1.2.2+2
 

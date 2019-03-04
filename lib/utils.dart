@@ -4,6 +4,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:system_setting/system_setting.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+
 
 void showDes(String value) {
   Fluttertoast.showToast(
@@ -20,7 +23,7 @@ void jumpCard(String value, var notes, context) {
   var email = 'iitism2k16@gmail.com';
   var subject = 'Re:Report regarding ' + notes['name'];
   var body = "";
-  if (value == 'Report')
+  if (value == 'Flag')
     openUrl('mailto:$email?subject=$subject&body=$body', 'Email');
   else if (value == 'Share')
     showDes(notes['name']);
@@ -33,6 +36,39 @@ void internetDesc(BuildContext context, String status) {
     backgroundColor: Colors.green,
     duration: Duration(seconds: 2),
   ));
+}
+
+void settingModalBottomSheet(context, notes) {
+  showModalBottomSheet(
+      context: context,
+      builder: (BuildContext bc) {
+        return Container(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                  leading: Icon(Icons.flag),
+                  title: Text('Flag'),
+                  onTap: () {
+                    jumpCard('Flag', notes, context);
+                  }),
+              ListTile(
+                leading: Icon(MdiIcons.share),
+                title: Text('Share'),
+                onTap: () {
+                  jumpCard('Share', notes, context);
+                },
+              ),
+              ListTile(
+                leading: Icon(MdiIcons.download),
+                title: Text('Download'),
+                onTap: () {
+                  jumpCard('Download', notes, context);
+                },
+              ),
+            ],
+          ),
+        );
+      });
 }
 
 showInternetDialog(BuildContext context) {
@@ -120,26 +156,6 @@ showInternetDialog(BuildContext context) {
       });
 }
 
-showMyDialog(BuildContext context) {
-  showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return new AlertDialog(
-          content: Text(
-            'Message Here',
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('OK'),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      });
-}
-
 Widget stackBehindDismiss() {
   return Container(
     alignment: Alignment.centerRight,
@@ -159,68 +175,71 @@ void showOptions(notes, context) {
     builder: (BuildContext context) {
       // return object of type Dialog
       return SingleChildScrollView(
-        child: AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-          title: Text(
-            notes['name'].toString().toUpperCase(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.blue,
+        child: Theme(
+          data: ThemeData.light(),
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0)),
+            title: Text(
+              notes['name'].toString().toUpperCase(),
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black45,
+              ),
             ),
+            content: Container(
+              child: Column(
+                children: <Widget>[
+                  CachedNetworkImage(
+                    imageUrl: notes['image'],
+                    width: 150.0,
+                    height: 150.0,
+                    placeholder: (context, url) => CircularProgressIndicator(
+                          strokeWidth: 3.0,
+                        ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+                  ),
+                  Text(
+                    "Description: " + notes['description'],
+                    textAlign: TextAlign.left,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
+                  ),
+                  Text(
+                    "Tags : " + notes['date'],
+                    textAlign: TextAlign.left,
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              // usually buttons at the bottom of the dialog
+              FlatButton(
+                child: new Text("View"),
+                onPressed: () {
+                  openUrl(notes['link'], notes['name']);
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: new Text("Close"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-          content: Container(
-            child: Column(
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: notes['image'],
-                  width: 150.0,
-                  height: 150.0,
-                  placeholder: (context, url) => CircularProgressIndicator(
-                        strokeWidth: 3.0,
-                      ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 5, 0, 5),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
-                ),
-                Text(
-                  "Description: " + notes['description'],
-                  textAlign: TextAlign.left,
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 5),
-                ),
-                Text(
-                  "Tags : " + notes['date'],
-                  textAlign: TextAlign.left,
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("View"),
-              onPressed: () {
-                openUrl(notes['link'], notes['name']);
-                Navigator.of(context).pop();
-              },
-            ),
-            new FlatButton(
-              child: new Text("Close"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         ),
       );
     },

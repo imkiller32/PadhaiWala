@@ -42,7 +42,7 @@ class HelpPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(MdiIcons.laptopChromebook),
+                      Icon(MdiIcons.laptopChromebook, color: Colors.black54),
                       Text(
                         '   Privacy Policy',
                         textAlign: TextAlign.left,
@@ -64,7 +64,7 @@ class HelpPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.phone),
+                      Icon(Icons.phone, color: Colors.blue),
                       Text(
                         '   Help Centre',
                         textAlign: TextAlign.left,
@@ -85,7 +85,7 @@ class HelpPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(Icons.feedback),
+                      Icon(Icons.feedback, color: Colors.grey),
                       Text(
                         '   Feedback',
                         textAlign: TextAlign.left,

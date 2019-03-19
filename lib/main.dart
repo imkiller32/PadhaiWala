@@ -132,33 +132,22 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     else if (value == 'RateUs') openUrl(playStoreLink, 'RateUs');
   }
 
-  Future<void> check(String link, String id, int index) async {
+  Future<void> viewAndDownload(String link, String id, int index) async {
     Dio dio = Dio();
     var dir = await getApplicationDocumentsDirectory();
+
+    List<int> value = await checkExistance(id);
+
     String loc = "${dir.path}/" + id + ".pdf";
-    showName(loc);
-    print(loc);
 
-    void test() async {
-      final file = File(loc);
-      //String filePath = await FilePicker.getFilePath(type: FileType.ANY);
-      DateTime t = await file.lastModified();
-      print(t);
-      // await OpenFile.open(loc);
-      windowUrl(loc, 'File', context);
-    }
+    if (value == null)
+      await dio.download(link, loc, onReceiveProgress: (rec, total) {
+        setState(() {
+          progress[index] = (rec / total);
+        });
+      });
 
-    // await dio.download(link, loc, onProgress: (rec, total) {
-    //   setState(() {
-    //     progress[index] = (rec / total);
-    //   });
-    // }).whenComplete(test);
-    showName(loc);
-    // try {
-    //   openUrl(loc, id);
-    // } catch (e) {
-    //   showName('error->' + e);
-    // }
+    showFile(loc);
   }
 
   Future<String> getData() async {
@@ -166,9 +155,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     data = await module.getJsonData(url);
     int len = data.length;
+    List<double> copied=[];
+    for (int i = 0; i < len; i++) {
+      List<int> value = await checkExistance(data[i]['id']);
+      if (value == null)
+        copied.add(0);
+      else
+        copied.add(1);
+    }
+
     setState(() {
       for (int i = 0; i < len; i++) {
-        progress.add(0);
+        progress.add(copied[i]);
       }
     });
     return "Success";
@@ -370,7 +368,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          openUrl(data[index]['link'], data[index]['name']);
+                          viewAndDownload(data[index]['link'], data[index]['id'], index);
+                          //openUrl(data[index]['link'], data[index]['name']);
+                          //openFile(data[index]['link'], data[index]['id']);
+                          //downloadThis(data[index]['link'],data[index]['id']);
                         },
                         onDoubleTap: () {
                           showDes(data[index]['name']);
@@ -486,11 +487,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                           ),
                                         ],
                                       ),
-
-                                      // LinearProgressIndicator(
-                                      //     value: (progress[index] == null)
-                                      //         ? 0
-                                      //         : progress[index]),
                                     ],
                                   ),
                                 ),
@@ -528,6 +524,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   ),
                                 ],
                               ),
+                              LinearProgressIndicator(
+                                  value: (progress[index] == null)
+                                      ? 0
+                                      : progress[index]),
                             ],
                           ),
                         ),

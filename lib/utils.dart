@@ -1,12 +1,18 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:core';
+import 'dart:typed_data';
+import 'dart:io';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:system_setting/system_setting.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-
+import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 
 void showDes(String value) {
   Fluttertoast.showToast(
@@ -255,6 +261,76 @@ void showName(String value) {
     backgroundColor: Colors.white,
     textColor: Colors.black,
   );
+}
+
+Future<String> get _localPath async {
+  final directory = await getApplicationDocumentsDirectory();
+  return directory.path;
+}
+
+Future<File> _localFile(id) async {
+  final path = await _localPath;
+  return File('$path/$id.pdf');
+}
+
+Future<void> downloadThis(link, id) async {
+  HttpClient client = new HttpClient();
+  var _downloadData = List<int>();
+  var fileSave = await _localFile(id);
+  print(fileSave.toString());
+  //var fileSave = new File('./logo.png');
+  client.getUrl(Uri.parse(link)).then((HttpClientRequest request) {
+    return request.close();
+  }).then((HttpClientResponse response) {
+    response.listen((d) => _downloadData.addAll(d), onDone: () {
+      fileSave.writeAsBytes(_downloadData);
+      // print(_downloadData.toString());
+    });
+  });
+}
+
+Future<Uint8List> downloadAsBytes(String url) {
+  return http.readBytes(url);
+}
+
+Future<List<int>> checkExistance(id) async {
+  try {
+    final file = await _localFile(id);
+    List<int> contents;
+    contents = await file.readAsBytes();
+    return (contents);
+  } catch (e) {
+    return null;
+  }
+}
+
+Future<Null> showFile(filePath) async{
+  PdfViewer.loadFile(filePath,
+      config: PdfViewerConfig(
+          nightMode: false,
+          swipeHorizontal: true,
+          autoSpacing: true,
+          forceLandscape: false,
+          pageSnap: true,
+          pageFling: true));
+}
+
+Future<Null> openFile(link, id) async {
+  //Uint8List file = await downloadAsBytes(link);
+  File path = await _localFile(id);
+  List<int> value = await checkExistance(id);
+  if (value == null) {
+    print("HelloME");
+    await downloadThis(link, id);
+  }
+  PdfViewer.loadFile(path.path,
+      config: PdfViewerConfig(
+          nightMode: false,
+          swipeHorizontal: true,
+          autoSpacing: true,
+          forceLandscape: false,
+          pageSnap: true,
+          pageFling: true));
 }
 
 Future<Null> openUrl(link, name) async {

@@ -34,6 +34,8 @@ dependencies:
   country_code_picker: ^1.1.1
   flutter_masked_text: ^0.7.0
   firebase_auth: ^0.6.6
+  flutter_pdf_viewer: ^0.2.2
+
   # advanced_share: ^0.1.0
   # open_file: ^1.2.2+2
 
@@ -63,6 +65,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/iitism.png
+    - assets/abcd.pdf
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

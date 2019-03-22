@@ -33,7 +33,7 @@ void jumpCard(String value, var notes, context) {
     openUrl('mailto:$email?subject=$subject&body=$body', 'Email');
   else if (value == 'Share')
     showDes(notes['name']);
-  else if (value == 'Download') openUrl(notes['link'], notes['name']);
+  else if (value == 'Delete') openUrl(notes['link'], notes['name']);
 }
 
 void internetDesc(BuildContext context, String status) {
@@ -44,38 +44,65 @@ void internetDesc(BuildContext context, String status) {
   ));
 }
 
-void settingModalBottomSheet(context, notes) {
-  showModalBottomSheet(
-      context: context,
-      builder: (BuildContext bc) {
-        return Container(
-          child: Wrap(
-            children: <Widget>[
-              ListTile(
-                  leading: Icon(Icons.flag),
-                  title: Text('Flag'),
-                  onTap: () {
-                    jumpCard('Flag', notes, context);
-                  }),
-              ListTile(
-                leading: Icon(MdiIcons.share),
-                title: Text('Share'),
-                onTap: () {
-                  jumpCard('Share', notes, context);
-                },
-              ),
-              ListTile(
-                leading: Icon(MdiIcons.download),
-                title: Text('Download'),
-                onTap: () {
-                  jumpCard('Download', notes, context);
-                },
-              ),
-            ],
-          ),
-        );
-      });
-}
+// Future<void> deleteDownloaded(index, notes, context) async {
+//   List<int> value = await checkExistance(notes['id']);
+//   if (value == null) return;
+//   var dir = await getApplicationDocumentsDirectory();
+//   String loc = "${dir.path}/" + notes['id'] + ".pdf";
+//   var path = Directory(loc);
+//   path.delete(recursive: true);
+// }
+
+// void settingModalBottomSheet(context, index, notes) async {
+//   List<int> value = await checkExistance(notes['id']);
+//   showModalBottomSheet(
+//       context: context,
+//       builder: (BuildContext bc) {
+//         return Container(
+//           child: Wrap(
+//             children: <Widget>[
+//               ListTile(
+//                   leading: Icon(Icons.flag),
+//                   title: Text('Flag'),
+//                   onTap: () {
+//                     jumpCard('Flag', notes, context);
+//                     Navigator.pop(context);
+//                   }),
+//               ListTile(
+//                 leading: Icon(MdiIcons.share),
+//                 title: Text('Share'),
+//                 onTap: () {
+//                   jumpCard('Share', notes, context);
+//                   Navigator.pop(context);
+//                 },
+//               ),
+//               (value != null)
+//                   ? ListTile(
+//                       leading: Icon(
+//                         MdiIcons.delete,
+//                       ),
+//                       title: Text('Delete'),
+//                       onTap: () {
+//                         deleteDownloaded(index, notes, context);
+//                         Navigator.pop(context);
+//                       },
+//                     )
+//                   : ListTile(
+//                       leading: Icon(
+//                         MdiIcons.download,
+//                       ),
+//                       title: Text('Download'),
+//                       onTap: () {
+//                         deleteDownloaded(index, notes, context);
+//                         Navigator.pop(context);
+//                       },
+//                     ),
+//             ],
+//           ),
+//         );
+//       });
+// }
+
 
 showInternetDialog(BuildContext context) {
   showDialog(
@@ -231,13 +258,13 @@ void showOptions(notes, context) {
             ),
             actions: <Widget>[
               // usually buttons at the bottom of the dialog
-              FlatButton(
-                child: new Text("View"),
-                onPressed: () {
-                  openUrl(notes['link'], notes['name']);
-                  Navigator.of(context).pop();
-                },
-              ),
+              // FlatButton(
+              //   child: new Text("View"),
+              //   onPressed: () {
+              //     openUrl(notes['link'], notes['name']);
+              //     Navigator.of(context).pop();
+              //   },
+              // ),
               FlatButton(
                 child: new Text("Close"),
                 onPressed: () {
@@ -304,7 +331,7 @@ Future<List<int>> checkExistance(id) async {
   }
 }
 
-Future<Null> showFile(filePath) async{
+Future<Null> showFile(filePath) async {
   PdfViewer.loadFile(filePath,
       config: PdfViewerConfig(
           nightMode: false,

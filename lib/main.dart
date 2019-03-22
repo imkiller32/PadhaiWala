@@ -132,7 +132,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     else if (value == 'RateUs') openUrl(playStoreLink, 'RateUs');
   }
 
-  Future<void> viewAndDownload(String link, String id, int index) async {
+  Future<void> viewNotes(String link, String id, int index) async {
+    String loc = await downloadNotes(link, id, index);
+    showFile(loc);
+  }
+
+  Future<String> downloadNotes(String link, String id, int index) async {
     Dio dio = Dio();
     var dir = await getApplicationDocumentsDirectory();
 
@@ -140,14 +145,173 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     String loc = "${dir.path}/" + id + ".pdf";
 
-    if (value == null)
+    if (value == null) {
+      showDes('Loading...');
       await dio.download(link, loc, onReceiveProgress: (rec, total) {
         setState(() {
           progress[index] = (rec / total);
         });
       });
+    }
+    return loc;
+  }
 
-    showFile(loc);
+  // void updateProgress(String id, index) async {
+  //   print('object');
+  //   List<int> value = await checkExistance(id);
+  //   if (value == null) {
+  //     setState(() {
+  //       progress[index] = 0;
+  //     });
+  //   }
+  // }
+
+  Future<void> deleteDownloaded(index) async {
+    var dir = await getApplicationDocumentsDirectory();
+    String loc = "${dir.path}/" + data[index]['id'] + ".pdf";
+    var path = Directory(loc);
+    path.delete(recursive: true);
+    setState(() {
+      progress[index] = 0;
+    });
+  }
+
+  // showDeleteDialog(BuildContext context, index) {
+  //   showDialog(
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return Theme(
+  //           data: ThemeData.dark(),
+  //           child: new AlertDialog(
+  //             shape: RoundedRectangleBorder(
+  //                 borderRadius: BorderRadius.circular(12.0)),
+  //             //content:
+  //           ),
+  //         );
+  //       });
+  // }
+
+  showDeleteDialog(BuildContext context, index) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Theme(
+            data: ThemeData.dark(),
+            child: new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0)),
+              content: Container(
+                width: double.infinity,
+                height: 120,
+                child: Column(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 15.0),
+                    ),
+                    FlatButton(
+                      color: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0)),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          'DELETE',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.3,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        deleteDownloaded(index);
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                    FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6.0)),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Text(
+                          'CANCEL',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.3,
+                            // decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+  }
+
+  void settingModalBottomSheet(context, index, notes) async {
+    List<int> value = await checkExistance(notes['id']);
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return Container(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: Icon(Icons.flag),
+                    title: Text('Flag'),
+                    onTap: () {
+                      jumpCard('Flag', notes, context);
+                      if (Navigator.canPop(context)) Navigator.pop(context);
+                    }),
+                ListTile(
+                  leading: Icon(MdiIcons.share),
+                  title: Text('Share'),
+                  onTap: () {
+                    jumpCard('Share', notes, context);
+                    if (Navigator.canPop(context)) Navigator.pop(context);
+                  },
+                ),
+                (value != null)
+                    ? ListTile(
+                        leading: Icon(
+                          MdiIcons.delete,
+                        ),
+                        title: Text('Delete'),
+                        onTap: () {
+                          deleteDownloaded(index);
+                          if (Navigator.canPop(context)) Navigator.pop(context);
+                        },
+                      )
+                    : ListTile(
+                        leading: Icon(
+                          MdiIcons.download,
+                        ),
+                        title: Text('Download'),
+                        onTap: () {
+                          downloadNotes(
+                              data[index]['link'], data[index]['id'], index);
+                          if (Navigator.canPop(context)) Navigator.pop(context);
+                        },
+                      ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void createBottomSheet(index) async {
+    settingModalBottomSheet(context, index, data[index]);
   }
 
   Future<String> getData() async {
@@ -155,7 +319,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     data = await module.getJsonData(url);
     int len = data.length;
-    List<double> copied=[];
+    List<double> copied = [];
     for (int i = 0; i < len; i++) {
       List<int> value = await checkExistance(data[i]['id']);
       if (value == null)
@@ -368,7 +532,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
-                          viewAndDownload(data[index]['link'], data[index]['id'], index);
+                          viewNotes(
+                              data[index]['link'], data[index]['id'], index);
                           //openUrl(data[index]['link'], data[index]['name']);
                           //openFile(data[index]['link'], data[index]['id']);
                           //downloadThis(data[index]['link'],data[index]['id']);
@@ -382,7 +547,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         },
                         child: Card(
                           clipBehavior: Clip.antiAlias,
-                          elevation: 1.0,
+                          elevation: 2.0,
+                          //color: Colors.white70,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(9.0),
                           ),
@@ -409,12 +575,16 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   tooltip: 'More Actions',
                                   icon: Icon(Icons.more_vert),
                                   onPressed: () {
-                                    settingModalBottomSheet(
-                                        context, data[index]);
+                                    createBottomSheet(index);
+                                    //updateProgress(data[index]['id'], index);
+                                    // setState(() {
+                                    //   progress[index] = 0;
+                                    // });
                                   },
                                 ),
                               ),
                               Card(
+                                //color: Colors.white10,
                                 elevation: 0.0,
                                 child: Container(
                                   child: Column(
@@ -434,6 +604,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                 right: 10.0,
                                                 bottom: 5.0),
                                             child: CachedNetworkImage(
+                                              fadeInCurve: Curves.easeIn,
                                               imageUrl: data[index]['image'],
                                               width: 100.0,
                                               height: 100.0,
@@ -495,7 +666,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 children: <Widget>[
                                   IconButton(
                                     onPressed: () {},
-                                    padding: EdgeInsets.only(left: 15),
+                                    //padding: EdgeInsets.only(left: 15),
                                     icon: Icon(
                                       Icons.favorite_border,
                                       color: Colors.black,
@@ -515,19 +686,89 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                       color: Colors.black,
                                     ),
                                   ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      MdiIcons.bookmarkOutline,
-                                      color: Colors.black,
+                                  Expanded(
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            MdiIcons.bookmarkOutline,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        (progress[index] == null ||
+                                                progress[index] == 0)
+                                            ? IconButton(
+                                                tooltip: "Tap to Download",
+                                                onPressed: () {
+                                                  downloadNotes(
+                                                      data[index]['link'],
+                                                      data[index]['id'],
+                                                      index);
+                                                },
+                                                icon: Icon(
+                                                  MdiIcons.download,
+                                                  color: Colors.black,
+                                                ),
+                                              )
+                                            : (progress[index] == 1)
+                                                ? IconButton(
+                                                    tooltip: "Tap to Delete",
+                                                    onPressed: () {
+                                                      showDeleteDialog(
+                                                          context, index);
+                                                      //deleteDownloaded(index);
+                                                    },
+                                                    icon: Icon(MdiIcons
+                                                        .checkboxMarkedCircle),
+                                                    color: Colors.green,
+                                                  )
+                                                : Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: <Widget>[
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                left: 18),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 15,
+                                                        height: 15,
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                          strokeWidth: 1.5,
+                                                          valueColor:
+                                                              AlwaysStoppedAnimation(
+                                                                  Colors.blue),
+                                                          value: (progress[
+                                                                      index] ==
+                                                                  null)
+                                                              ? 0
+                                                              : progress[index],
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            EdgeInsets.only(
+                                                                right: 15),
+                                                      ),
+                                                    ],
+                                                  ),
+                                        Padding(
+                                          padding: EdgeInsets.only(right: 5),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ],
                               ),
-                              LinearProgressIndicator(
-                                  value: (progress[index] == null)
-                                      ? 0
-                                      : progress[index]),
+                              // LinearProgressIndicator(
+                              //     value: (progress[index] == null)
+                              //         ? 0
+                              //         : progress[index]),
+                              //Divider(height: 10.0,),
                             ],
                           ),
                         ),

@@ -331,10 +331,10 @@ Future<List<int>> checkExistance(id) async {
   }
 }
 
-Future<Null> showFile(filePath) async {
+Future<Null> showFile(filePath,pdfTheme) async {
   PdfViewer.loadFile(filePath,
       config: PdfViewerConfig(
-          nightMode: false,
+          nightMode: pdfTheme,
           swipeHorizontal: true,
           autoSpacing: true,
           forceLandscape: false,

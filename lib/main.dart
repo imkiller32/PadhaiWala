@@ -13,6 +13,7 @@ import 'module.dart';
 import 'share.dart';
 import 'contact_us.dart';
 import 'help.dart';
+import 'setting.dart';
 import 'login.dart';
 
 void main() => runApp(MaterialApp(
@@ -44,6 +45,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     Icons.cloud_upload
   ];
   List data;
+  bool pdfTheme = additionalSettings.getPdfTheme();
   List<double> progress = [];
   Module module;
   @override
@@ -114,12 +116,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void jump(String value) {
-    if (value == "login")
+    if (value == 'Setting') {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => Setting()),
       );
-    else if (value == 'ContactUs')
+      setState(() {
+        pdfTheme = additionalSettings.getPdfTheme();
+      });
+    } else if (value == 'ContactUs')
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => ContactUs()),
@@ -129,12 +134,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         context,
         MaterialPageRoute(builder: (context) => Help()),
       );
-    else if (value == 'RateUs') openUrl(playStoreLink, 'RateUs');
+    else if (value == 'RateUs')
+      openUrl(playStoreLink, 'RateUs');
+    else if (value == 'login')
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Login()),
+      );
   }
 
   Future<void> viewNotes(String link, String id, int index) async {
     String loc = await downloadNotes(link, id, index);
-    showFile(loc);
+    showFile(loc,pdfTheme);
   }
 
   Future<String> downloadNotes(String link, String id, int index) async {
@@ -146,7 +157,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     String loc = "${dir.path}/" + id + ".pdf";
 
     if (value == null) {
-      showDes('Loading...');
+      showDes('Initiating...');
       await dio.download(link, loc, onReceiveProgress: (rec, total) {
         setState(() {
           progress[index] = (rec / total);
@@ -378,6 +389,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           PopupMenuButton(
             itemBuilder: (BuildContext context) {
               return [
+                PopupMenuItem(
+                  child: Row(
+                    children: <Widget>[
+                      Icon(Icons.settings),
+                      Text('  Settings'),
+                    ],
+                  ),
+                  value: 'Setting',
+                ),
                 PopupMenuItem(
                   child: Row(
                     children: <Widget>[

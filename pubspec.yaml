@@ -35,6 +35,7 @@ dependencies:
   flutter_masked_text: ^0.7.0
   firebase_auth: ^0.6.6
   flutter_pdf_viewer: ^0.2.2
+  flutter_spinkit: ^3.1.0
 
   # advanced_share: ^0.1.0
   # open_file: ^1.2.2+2

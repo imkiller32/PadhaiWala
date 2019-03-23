@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:core';
 import 'dart:typed_data';
 import 'dart:io';
@@ -11,7 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:system_setting/system_setting.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 
 void showDes(String value) {
@@ -102,7 +100,6 @@ void internetDesc(BuildContext context, String status) {
 //         );
 //       });
 // }
-
 
 showInternetDialog(BuildContext context) {
   showDialog(
@@ -331,7 +328,7 @@ Future<List<int>> checkExistance(id) async {
   }
 }
 
-Future<Null> showFile(filePath,pdfTheme) async {
+Future<Null> showFile(filePath, pdfTheme) async {
   PdfViewer.loadFile(filePath,
       config: PdfViewerConfig(
           nightMode: pdfTheme,
@@ -417,44 +414,3 @@ void downloadBar(String link, context, String id) {
     }
   });
 }
-/*
-Future<void> Downloadbar(String link, context, String id) async {
-  Dio dio = Dio();
-  var progress = "0";
-  try {
-    var dir = await getApplicationDocumentsDirectory();
-    await dio.download(link, "${dir.path}/" + id + ".pdf",
-        onProgress: (rec, total) {
-      print("Rec: $rec , Total: $total");
-      progress = ((rec ~/ total) * 100).toString();
-      showDialog<String>(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-              title: Text('Downloading...'),
-              content: Row(
-                children: <Widget>[
-                  CircularProgressIndicator(),
-                  Text(progress + " %"),
-                ],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text('Cancel'),
-                  onPressed: () => Navigator.pop(context, 'Cancel'),
-                ),
-                FlatButton(
-                  child: Text('OK'),
-                  onPressed: () => Navigator.pop(context, 'OK'),
-                ),
-              ],
-            ),
-      ).then<String>((returnVal) {
-        if (returnVal != null) {
-          showName(returnVal);
-        }
-      });
-    });
-  } catch (e) {
-    print(e);
-  }
-}*/

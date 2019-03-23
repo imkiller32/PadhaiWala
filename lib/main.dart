@@ -8,6 +8,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'search.dart';
 import 'module.dart';
 import 'share.dart';
@@ -145,7 +146,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   Future<void> viewNotes(String link, String id, int index) async {
     String loc = await downloadNotes(link, id, index);
-    showFile(loc,pdfTheme);
+    showFile(loc, additionalSettings.getPdfTheme());
   }
 
   Future<String> downloadNotes(String link, String id, int index) async {
@@ -186,21 +187,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       progress[index] = 0;
     });
   }
-
-  // showDeleteDialog(BuildContext context, index) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return Theme(
-  //           data: ThemeData.dark(),
-  //           child: new AlertDialog(
-  //             shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(12.0)),
-  //             //content:
-  //           ),
-  //         );
-  //       });
-  // }
 
   showDeleteDialog(BuildContext context, index) {
     showDialog(
@@ -441,9 +427,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               icon: Icon(Icons.bookmark), title: Text('Bookmarks')),
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
           BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Me')),
-
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.school), title: Text('Bookmark')),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -509,298 +492,346 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
       ),
-      body: RefreshIndicator(
-        key: refreshKey,
-        onRefresh: onRefreshChange,
-        child: ListView.builder(
-          itemCount: data == null ? 0 : data.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Dismissible(
-              direction: DismissDirection.endToStart,
-              resizeDuration: Duration(milliseconds: 1000),
-              key: ObjectKey(data[index]['id']),
-              onDismissed: (direction) {
-                var toDelete = data.elementAt(index);
-                setState(() {
-                  data.removeAt(index);
-                });
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content:
-                      Text(data[index]['name'].toUpperCase() + ' Deleted '),
-                  backgroundColor: Colors.black,
-                  duration: Duration(seconds: 3),
-                  action: SnackBarAction(
-                    label: 'Undo',
-                    textColor: Colors.blue,
-                    onPressed: () {
-                      Timer(Duration(seconds: 1), () {
-                        setState(() {
-                          data.insert(index, toDelete);
-                        });
-                      });
-                    },
+      body: (data == null)
+          ? Center(
+              child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SpinKitFadingCircle(
+                  itemBuilder: (_, int index) {
+                    return DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: index.isEven ? Colors.blue : Colors.black,
+                      ),
+                    );
+                  },
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                ),
+                Text(
+                  "Loading...",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                    fontSize: 20,
                   ),
-                ));
-              },
-              background: stackBehindDismiss(),
-              child: Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(4.0),
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () {
-                          viewNotes(
-                              data[index]['link'], data[index]['id'], index);
-                          //openUrl(data[index]['link'], data[index]['name']);
-                          //openFile(data[index]['link'], data[index]['id']);
-                          //downloadThis(data[index]['link'],data[index]['id']);
-                        },
-                        onDoubleTap: () {
-                          showDes(data[index]['name']);
-                        },
-                        onLongPress: () {
-                          // showDes(data[index]['description']);
-                          showOptions(data[index], context);
-                        },
-                        child: Card(
-                          clipBehavior: Clip.antiAlias,
-                          elevation: 2.0,
-                          //color: Colors.white70,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(9.0),
-                          ),
-                          child: Column(
-                            children: <Widget>[
-                              ListTile(
-                                title: Container(
-                                  margin: const EdgeInsets.only(right: 5.0),
-                                  child: Text(
-                                    data[index]['name']
-                                        .toString()
-                                        .toUpperCase(),
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.w500,
+                ),
+              ],
+            ))
+          : RefreshIndicator(
+              key: refreshKey,
+              onRefresh: onRefreshChange,
+              child: ListView.builder(
+                itemCount: data == null ? 0 : data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Dismissible(
+                    direction: DismissDirection.endToStart,
+                    resizeDuration: Duration(milliseconds: 1000),
+                    key: ObjectKey(data[index]['id']),
+                    onDismissed: (direction) {
+                      var toDelete = data.elementAt(index);
+                      setState(() {
+                        data.removeAt(index);
+                      });
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                            data[index]['name'].toUpperCase() + ' Deleted '),
+                        backgroundColor: Colors.black,
+                        duration: Duration(seconds: 3),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          textColor: Colors.blue,
+                          onPressed: () {
+                            Timer(Duration(seconds: 1), () {
+                              setState(() {
+                                data.insert(index, toDelete);
+                              });
+                            });
+                          },
+                        ),
+                      ));
+                    },
+                    background: stackBehindDismiss(),
+                    child: Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(4.0),
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () {
+                                viewNotes(data[index]['link'],
+                                    data[index]['id'], index);
+                              },
+                              onDoubleTap: () {
+                                showDes(data[index]['name']);
+                              },
+                              onLongPress: () {
+                                // showDes(data[index]['description']);
+                                showOptions(data[index], context);
+                              },
+                              child: Card(
+                                clipBehavior: Clip.antiAlias,
+                                elevation: 2.0,
+                                //color: Colors.white70,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(9.0),
+                                ),
+                                child: Column(
+                                  children: <Widget>[
+                                    ListTile(
+                                      title: Container(
+                                        margin:
+                                            const EdgeInsets.only(right: 5.0),
+                                        child: Text(
+                                          data[index]['name']
+                                              .toString()
+                                              .toUpperCase(),
+                                          textAlign: TextAlign.start,
+                                          style: TextStyle(
+                                            fontSize: 18.0,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      contentPadding: EdgeInsets.only(left: 20),
+                                      trailing: IconButton(
+                                        tooltip: 'More Actions',
+                                        icon: Icon(Icons.more_vert),
+                                        onPressed: () {
+                                          createBottomSheet(index);
+                                          //updateProgress(data[index]['id'], index);
+                                          // setState(() {
+                                          //   progress[index] = 0;
+                                          // });
+                                        },
+                                      ),
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                contentPadding: EdgeInsets.only(left: 20),
-                                trailing: IconButton(
-                                  tooltip: 'More Actions',
-                                  icon: Icon(Icons.more_vert),
-                                  onPressed: () {
-                                    createBottomSheet(index);
-                                    //updateProgress(data[index]['id'], index);
-                                    // setState(() {
-                                    //   progress[index] = 0;
-                                    // });
-                                  },
-                                ),
-                              ),
-                              Card(
-                                //color: Colors.white10,
-                                elevation: 0.0,
-                                child: Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      // Padding(
-                                      //   padding: const EdgeInsets.all(3.0),
-                                      // ),
-                                      Row(
-                                        //mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Container(
-                                            margin: const EdgeInsets.only(
-                                                top: 0.0,
-                                                left: 15.0,
-                                                right: 10.0,
-                                                bottom: 5.0),
-                                            child: CachedNetworkImage(
-                                              fadeInCurve: Curves.easeIn,
-                                              imageUrl: data[index]['image'],
-                                              width: 100.0,
-                                              height: 100.0,
-                                              placeholder: (context, url) =>
-                                                  CircularProgressIndicator(),
-                                              errorWidget:
-                                                  (context, url, error) =>
-                                                      Icon(Icons.error),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 3.0, right: 10.0),
-                                          ),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                    Card(
+                                      //color: Colors.white10,
+                                      elevation: 0.0,
+                                      child: Container(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.stretch,
+                                          children: <Widget>[
+                                            // Padding(
+                                            //   padding: const EdgeInsets.all(3.0),
+                                            // ),
+                                            Row(
+                                              //mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[
                                                 Container(
                                                   margin: const EdgeInsets.only(
-                                                      right: 10.0, top: 0.0),
-                                                  child: Text(
-                                                    data[index]['description'],
-                                                    style: TextStyle(
-                                                      fontSize: 15.0,
-                                                    ),
-                                                    maxLines: 3,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                      top: 0.0,
+                                                      left: 15.0,
+                                                      right: 10.0,
+                                                      bottom: 5.0),
+                                                  child: CachedNetworkImage(
+                                                    fadeInCurve: Curves.easeIn,
+                                                    imageUrl: data[index]
+                                                        ['image'],
+                                                    width: 100.0,
+                                                    height: 100.0,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        CircularProgressIndicator(),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(Icons.error),
                                                   ),
                                                 ),
-                                                Container(
-                                                  margin: const EdgeInsets.only(
-                                                      right: 10.0, top: 7.0),
-                                                  child: Text(
-                                                    "Uploaded on : " +
-                                                        data[index]['date'],
-                                                    style: TextStyle(
-                                                      color: Colors.blueAccent,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 3.0,
+                                                          right: 10.0),
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: <Widget>[
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                                .only(
+                                                            right: 10.0,
+                                                            top: 0.0),
+                                                        child: Text(
+                                                          data[index]
+                                                              ['description'],
+                                                          style: TextStyle(
+                                                            fontSize: 15.0,
+                                                          ),
+                                                          maxLines: 3,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                                .only(
+                                                            right: 10.0,
+                                                            top: 7.0),
+                                                        child: Text(
+                                                          "Uploaded on : " +
+                                                              data[index]
+                                                                  ['date'],
+                                                          style: TextStyle(
+                                                            color: Colors
+                                                                .blueAccent,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  IconButton(
-                                    onPressed: () {},
-                                    //padding: EdgeInsets.only(left: 15),
-                                    icon: Icon(
-                                      Icons.favorite_border,
-                                      color: Colors.black,
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      MdiIcons.commentOutline,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(
-                                      MdiIcons.shareOutline,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
+                                    Row(
                                       children: <Widget>[
                                         IconButton(
                                           onPressed: () {},
+                                          //padding: EdgeInsets.only(left: 15),
                                           icon: Icon(
-                                            MdiIcons.bookmarkOutline,
+                                            Icons.favorite_border,
                                             color: Colors.black,
                                           ),
                                         ),
-                                        (progress[index] == null ||
-                                                progress[index] == 0)
-                                            ? IconButton(
-                                                tooltip: "Tap to Download",
-                                                onPressed: () {
-                                                  downloadNotes(
-                                                      data[index]['link'],
-                                                      data[index]['id'],
-                                                      index);
-                                                },
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            MdiIcons.commentOutline,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          onPressed: () {},
+                                          icon: Icon(
+                                            MdiIcons.shareOutline,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: <Widget>[
+                                              IconButton(
+                                                onPressed: () {},
                                                 icon: Icon(
-                                                  MdiIcons.download,
+                                                  MdiIcons.bookmarkOutline,
                                                   color: Colors.black,
                                                 ),
-                                              )
-                                            : (progress[index] == 1)
-                                                ? IconButton(
-                                                    tooltip: "Tap to Delete",
-                                                    onPressed: () {
-                                                      showDeleteDialog(
-                                                          context, index);
-                                                      //deleteDownloaded(index);
-                                                    },
-                                                    icon: Icon(MdiIcons
-                                                        .checkboxMarkedCircle),
-                                                    color: Colors.green,
-                                                  )
-                                                : Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    children: <Widget>[
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                left: 18),
+                                              ),
+                                              (progress[index] == null ||
+                                                      progress[index] == 0)
+                                                  ? IconButton(
+                                                      tooltip:
+                                                          "Tap to Download",
+                                                      onPressed: () {
+                                                        downloadNotes(
+                                                            data[index]['link'],
+                                                            data[index]['id'],
+                                                            index);
+                                                      },
+                                                      icon: Icon(
+                                                        MdiIcons.download,
+                                                        color: Colors.black,
                                                       ),
-                                                      SizedBox(
-                                                        width: 15,
-                                                        height: 15,
-                                                        child:
-                                                            CircularProgressIndicator(
-                                                          strokeWidth: 1.5,
-                                                          valueColor:
-                                                              AlwaysStoppedAnimation(
-                                                                  Colors.blue),
-                                                          value: (progress[
-                                                                      index] ==
-                                                                  null)
-                                                              ? 0
-                                                              : progress[index],
+                                                    )
+                                                  : (progress[index] == 1)
+                                                      ? IconButton(
+                                                          tooltip:
+                                                              "Tap to Delete",
+                                                          onPressed: () {
+                                                            showDeleteDialog(
+                                                                context, index);
+                                                            //deleteDownloaded(index);
+                                                          },
+                                                          icon: Icon(MdiIcons
+                                                              .checkboxMarkedCircle),
+                                                          color: Colors.green,
+                                                        )
+                                                      : Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: <Widget>[
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      left: 18),
+                                                            ),
+                                                            SizedBox(
+                                                              width: 15,
+                                                              height: 15,
+                                                              child:
+                                                                  CircularProgressIndicator(
+                                                                strokeWidth:
+                                                                    1.5,
+                                                                valueColor:
+                                                                    AlwaysStoppedAnimation(
+                                                                        Colors
+                                                                            .blue),
+                                                                value: (progress[
+                                                                            index] ==
+                                                                        null)
+                                                                    ? 0
+                                                                    : progress[
+                                                                        index],
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                      right:
+                                                                          15),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                right: 15),
-                                                      ),
-                                                    ],
-                                                  ),
-                                        Padding(
-                                          padding: EdgeInsets.only(right: 5),
+                                              Padding(
+                                                padding:
+                                                    EdgeInsets.only(right: 5),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                ],
+                                    // LinearProgressIndicator(
+                                    //     value: (progress[index] == null)
+                                    //         ? 0
+                                    //         : progress[index]),
+                                    //Divider(height: 10.0,),
+                                  ],
+                                ),
                               ),
-                              // LinearProgressIndicator(
-                              //     value: (progress[index] == null)
-                              //         ? 0
-                              //         : progress[index]),
-                              //Divider(height: 10.0,),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
-      ),
+            ),
     );
   }
 }

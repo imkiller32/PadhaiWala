@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter_masked_text/flutter_masked_text.dart';
@@ -115,7 +116,10 @@ class _LoginState extends State<Login> {
     FirebaseAuth.instance
         .signInWithPhoneNumber(verificationId: verificationId, smsCode: smsCode)
         .then((user) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Help()),);
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Help()),
+      );
     }).catchError((e) {
       print(e);
     });
@@ -140,12 +144,15 @@ class _LoginState extends State<Login> {
             : () {
                 FirebaseAuth.instance.currentUser().then((user) {
                   if (user != null) {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ContactUs()),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ContactUs()),
+                    );
                     showDes('hello');
                   } else {
                     showDes('CallOneMore');
-                   // Navigator.push(context, MaterialPageRoute(builder: (context) => Help()),);
-                     signIn();
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => Help()),);
+                    signIn();
                   }
                 });
               },
@@ -259,5 +266,3 @@ class _LoginState extends State<Login> {
     );
   }
 }
-
-

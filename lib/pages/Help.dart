@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'utils.dart';
+import 'package:iitism2k16/utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 void main() => runApp(Help());
@@ -18,7 +18,7 @@ class Help extends StatelessWidget {
 
 class HelpPage extends StatelessWidget {
   final email = 'iitism2k16@gmail.com';
-  final subject = 'FeedBack regarding iitism2k16 1.1.0';
+  final subject = 'FeedBack regarding PadhaiWala 1.1.0';
   final body = "";
   @override
   Widget build(BuildContext context) {
@@ -108,8 +108,21 @@ class HelpPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 15.0),
               ),
-              Text('iitism2k16'),
+              Text('PadhaiWala'),
               Text('Version:1.1.0'),
+              Padding(
+                padding: EdgeInsets.only(top: 35.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'We are always here for you !',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

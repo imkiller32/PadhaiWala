@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'utils.dart';
+import 'package:iitism2k16/utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
-void main() => runApp(ContactUs());
 
 class ContactUs extends StatelessWidget {
   @override
@@ -145,6 +143,19 @@ class ContactPage extends StatelessWidget {
                 onPressed: () {
                   openUrl('https://goo.gl/maps/2jQQVNLTdK82', 'iitism2k16');
                 },
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 35.0),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'We are always here for you !',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ],
               ),
             ],
           ),

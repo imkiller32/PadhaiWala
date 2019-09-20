@@ -18,8 +18,9 @@ void showDes(String value) {
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
     timeInSecForIos: 1,
-    backgroundColor: Colors.black,
-    textColor: Colors.white,
+    fontSize: 16.0,
+    // backgroundColor: Colors.black,
+    // textColor: Colors.white,
   );
 }
 
@@ -226,8 +227,8 @@ void showOptions(notes, context) {
                     width: 150.0,
                     height: 150.0,
                     placeholder: (context, url) => CircularProgressIndicator(
-                          strokeWidth: 3.0,
-                        ),
+                      strokeWidth: 3.0,
+                    ),
                     errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
                   Padding(
@@ -367,11 +368,9 @@ Future<Null> openUrl(link, name) async {
 
 Future windowUrl(link, value, context) async {
   if (await url_launcher.canLaunch(link)) {
+    //showDes("NotPossible");
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => WebviewScaffold(
-              initialChild: Center(
-                child: CircularProgressIndicator(),
-              ),
               withZoom: true,
               scrollBar: true,
               url: link,
@@ -380,37 +379,37 @@ Future windowUrl(link, value, context) async {
                 title: Text(value),
               ),
             )));
-    //showDes("Can be");
+    showDes("Can be");
   } else {
     showDes("NotPossible");
   }
 }
 
-void downloadBar(String link, context, String id) {
-  showDialog<String>(
-    context: context,
-    builder: (BuildContext context) => AlertDialog(
-          title: Text('Downloading...'),
-          content: Row(
-            children: <Widget>[
-              CircularProgressIndicator(),
-              Text(" %"),
-            ],
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Cancel'),
-              onPressed: () => Navigator.pop(context, 'Cancel'),
-            ),
-            FlatButton(
-              child: Text('OK'),
-              onPressed: () => Navigator.pop(context, 'OK'),
-            ),
-          ],
-        ),
-  ).then<String>((returnVal) {
-    if (returnVal != null) {
-      showName(returnVal);
-    }
-  });
-}
+// void downloadBar(String link, context, String id) {
+//   showDialog<String>(
+//     context: context,
+//     builder: (BuildContext context) => AlertDialog(
+//           title: Text('Downloading...'),
+//           content: Row(
+//             children: <Widget>[
+//               CircularProgressIndicator(),
+//               Text(" %"),
+//             ],
+//           ),
+//           actions: <Widget>[
+//             FlatButton(
+//               child: Text('Cancel'),
+//               onPressed: () => Navigator.pop(context, 'Cancel'),
+//             ),
+//             FlatButton(
+//               child: Text('OK'),
+//               onPressed: () => Navigator.pop(context, 'OK'),
+//             ),
+//           ],
+//         ),
+//   ).then<String>((returnVal) {
+//     if (returnVal != null) {
+//       showName(returnVal);
+//     }
+//   });
+// }

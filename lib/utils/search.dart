@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'module.dart';
+import 'package:iitism2k16/utils.dart';
+import 'package:iitism2k16/utils/module.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'utils.dart';
 
 class DataSearch extends SearchDelegate<String> {
   Module module = Module();
@@ -47,7 +47,7 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     final suggestionList = query.isEmpty
-        ? data
+        ? ((data.length==0)?[]:data)
         : data.where((p) => p['name'].contains(query.toLowerCase())).toList();
     return ListView.builder(
       itemBuilder: (context, index) => ListTile(

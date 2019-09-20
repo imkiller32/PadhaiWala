@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'utils.dart';
-import 'module.dart';
-
-void main() => runApp(Setting());
+import 'package:iitism2k16/utils/module.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -41,14 +38,15 @@ class _SettingState extends State<Setting> {
                       style: TextStyle(color: Colors.black),
                     ),
                     trailing: Switch(
-                      value: darkTheme,
-                      onChanged: (value) {
-                        setState(() {
-                          darkTheme = false;
-                          showDes('added soon');
-                          additionalSettings.setTheme(darkTheme);
-                        });
-                      },
+                      value: false,
+                      onChanged: null,
+                      // onChanged: (value) {
+                      //   setState(() {
+                      //     darkTheme = false;
+                      //     showDes('added soon');
+                      //     additionalSettings.setTheme(darkTheme);
+                      //   });
+                      // },
                     ),
                   ),
                   Divider(

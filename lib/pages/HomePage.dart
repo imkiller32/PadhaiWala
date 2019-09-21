@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 
 import 'package:iitism2k16/pages/Contact_Us.dart';
 import 'package:iitism2k16/pages/Help.dart';
@@ -34,7 +34,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   StreamSubscription<ConnectivityResult> subscription;
   final String url = "http://liveism.xyz/fetch.php";
   final String playStoreLink =
-      "https://play.google.com/store/apps/details?id=com.webnode.iitism2k16.www.iitism2k16";
+      "https://play.google.com/store/apps/details?id=com.imkiller.padhaiwala&hl=en";
   final String upload = "https://liveism.xyz/upload.php";
   AnimationController _controller;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -183,6 +183,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     String loc = "${dir.path}/" + data[index]['id'] + ".pdf";
     var path = Directory(loc);
     path.delete(recursive: true);
+    showDes('Deleted ' + data[index]['name']);
     setState(() {
       progress[index] = 0;
     });
@@ -732,74 +733,24 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ),
                                     Row(
                                       children: <Widget>[
-                                        // IconButton(
-                                        //   onPressed: () {
-                                        //     HapticFeedback.vibrate();
-                                        //     if (liked[index] == 0)
-                                        //       showDes('liked');
-                                        //     setState(() {
-                                        //       if (liked[index] == 0)
-                                        //         liked[index] = 1;
-                                        //       else
-                                        //         liked[index] = 0;
-                                        //     });
-                                        //   },
-                                        //   icon: (liked[index] == null ||
-                                        //           liked[index] == 0)
-                                        //       ? Icon(
-                                        //           Icons.favorite_border,
-                                        //           color: Colors.black,
-                                        //         )
-                                        //       : Icon(
-                                        //           Icons.favorite,
-                                        //           color: Colors.black,
-                                        //         ),
-                                        // ),
-                                        // IconButton(
-                                        //   onPressed: () {},
-                                        //   icon: Icon(
-                                        //     MdiIcons.commentOutline,
-                                        //     color: Colors.black,
-                                        //   ),
-                                        // ),
-                                        // IconButton(
-                                        //   onPressed: () {},
-                                        //   icon: Icon(
-                                        //     MdiIcons.shareOutline,
-                                        //     color: Colors.black,
-                                        //   ),
-                                        // ),
                                         Expanded(
                                           child: Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.end,
                                             children: <Widget>[
-                                              // IconButton(
-                                              //   onPressed: () {
-                                              //     HapticFeedback.vibrate();
-                                              //     if (bookmark[index] == 0)
-                                              //       showDes('bookmarked');
-                                              //     setState(() {
-                                              //       if (bookmark[index] == 0)
-                                              //         bookmark[index] = 1;
-                                              //       else
-                                              //         bookmark[index] = 0;
-                                              //     });
-                                              //   },
-                                              //   icon: (bookmark[index] ==
-                                              //               null ||
-                                              //           bookmark[index] == 0)
-                                              //       ? Icon(
-                                              //           MdiIcons
-                                              //               .bookmarkOutline,
-                                              //           color: Colors.black,
-                                              //         )
-                                              //       : Icon(
-                                              //           MdiIcons.bookmark,
-                                              //           color:
-                                              //               Colors.blueAccent,
-                                              //         ),
-                                              // ),
+                                              Opacity(
+                                                opacity: 0.5,
+                                                child: IconButton(
+                                                    onPressed: () {
+                                                      showOptions(
+                                                          data[index], context);
+                                                    },
+                                                    icon: Icon(
+                                                      MdiIcons
+                                                          .informationVariant,
+                                                      color: Colors.black,
+                                                    )),
+                                              ),
                                               (progress[index] == null ||
                                                       progress[index] == 0)
                                                   ? IconButton(

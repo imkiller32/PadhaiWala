@@ -8,7 +8,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+//import 'package:webview_flutter/webview_flutter.dart';
 import 'package:system_setting/system_setting.dart';
 import 'package:flutter_pdf_viewer/flutter_pdf_viewer.dart';
 
@@ -50,56 +51,6 @@ void internetDesc(BuildContext context, String status) {
 //   String loc = "${dir.path}/" + notes['id'] + ".pdf";
 //   var path = Directory(loc);
 //   path.delete(recursive: true);
-// }
-
-// void settingModalBottomSheet(context, index, notes) async {
-//   List<int> value = await checkExistance(notes['id']);
-//   showModalBottomSheet(
-//       context: context,
-//       builder: (BuildContext bc) {
-//         return Container(
-//           child: Wrap(
-//             children: <Widget>[
-//               ListTile(
-//                   leading: Icon(Icons.flag),
-//                   title: Text('Flag'),
-//                   onTap: () {
-//                     jumpCard('Flag', notes, context);
-//                     Navigator.pop(context);
-//                   }),
-//               ListTile(
-//                 leading: Icon(MdiIcons.share),
-//                 title: Text('Share'),
-//                 onTap: () {
-//                   jumpCard('Share', notes, context);
-//                   Navigator.pop(context);
-//                 },
-//               ),
-//               (value != null)
-//                   ? ListTile(
-//                       leading: Icon(
-//                         MdiIcons.delete,
-//                       ),
-//                       title: Text('Delete'),
-//                       onTap: () {
-//                         deleteDownloaded(index, notes, context);
-//                         Navigator.pop(context);
-//                       },
-//                     )
-//                   : ListTile(
-//                       leading: Icon(
-//                         MdiIcons.download,
-//                       ),
-//                       title: Text('Download'),
-//                       onTap: () {
-//                         deleteDownloaded(index, notes, context);
-//                         Navigator.pop(context);
-//                       },
-//                     ),
-//             ],
-//           ),
-//         );
-//       });
 // }
 
 showInternetDialog(BuildContext context) {
@@ -345,7 +296,7 @@ Future<Null> openFile(link, id) async {
   File path = await _localFile(id);
   List<int> value = await checkExistance(id);
   if (value == null) {
-    print("HelloME");
+    print("File not present in local storage.");
     await downloadThis(link, id);
   }
   PdfViewer.loadFile(path.path,
@@ -368,48 +319,21 @@ Future<Null> openUrl(link, name) async {
 
 Future windowUrl(link, value, context) async {
   if (await url_launcher.canLaunch(link)) {
-    //showDes("NotPossible");
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => WebviewScaffold(
-              withZoom: true,
-              scrollBar: true,
-              url: link,
-              withJavascript: true,
-              appBar: AppBar(
-                title: Text(value),
-              ),
-            )));
-    showDes("Can be");
+    await url_launcher.launch(link);
   } else {
-    showDes("NotPossible");
+    showDes("Can not");
   }
+  // Completer<WebViewController> _controller = Completer<WebViewController>();
+  // if (await url_launcher.canLaunch(link)) {
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (ctx) => WebView(
+  //             initialUrl: link,
+  //             javascriptMode: JavascriptMode.unrestricted,
+  //             onWebViewCreated: (WebViewController controller) {
+  //               _controller.complete(controller);
+  //             },
+  //           )));
+  // } else {
+  //   showDes("NotPossible");
+  // }
 }
-
-// void downloadBar(String link, context, String id) {
-//   showDialog<String>(
-//     context: context,
-//     builder: (BuildContext context) => AlertDialog(
-//           title: Text('Downloading...'),
-//           content: Row(
-//             children: <Widget>[
-//               CircularProgressIndicator(),
-//               Text(" %"),
-//             ],
-//           ),
-//           actions: <Widget>[
-//             FlatButton(
-//               child: Text('Cancel'),
-//               onPressed: () => Navigator.pop(context, 'Cancel'),
-//             ),
-//             FlatButton(
-//               child: Text('OK'),
-//               onPressed: () => Navigator.pop(context, 'OK'),
-//             ),
-//           ],
-//         ),
-//   ).then<String>((returnVal) {
-//     if (returnVal != null) {
-//       showName(returnVal);
-//     }
-//   });
-// }

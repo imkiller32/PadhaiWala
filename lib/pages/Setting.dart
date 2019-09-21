@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:iitism2k16/utils/module.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
+
+Future<Null> changeShared(pdftheme) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('PdfTheme', pdftheme);
+}
 
 class Setting extends StatefulWidget {
   @override
@@ -61,6 +68,7 @@ class _SettingState extends State<Setting> {
                     trailing: Switch(
                       value: pdfTheme,
                       onChanged: (value) {
+                        changeShared(value);
                         setState(() {
                           additionalSettings.setPdf(value);
                           pdfTheme = value;

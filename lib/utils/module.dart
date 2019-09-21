@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Module {
   List data;
@@ -18,11 +19,22 @@ class Module {
   }
 }
 
+bool pdfTheme = false;
+Future<Null> getThemeFromShared() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  pdfTheme = prefs.getBool('PdfTheme') ?? false;
+}
+
 class AdditionalSettings {
   bool darkTheme;
   bool pdfDarkTheme;
 
-  AdditionalSettings(this.darkTheme, this.pdfDarkTheme);
+  AdditionalSettings(darkTheme, pdfDarkTheme) {
+    getThemeFromShared();
+    pdfDarkTheme = pdfTheme;
+    this.darkTheme = darkTheme;
+    this.pdfDarkTheme = pdfDarkTheme;
+  }
 
   void setTheme(darkTheme) {
     this.darkTheme = darkTheme;
@@ -41,4 +53,4 @@ class AdditionalSettings {
   }
 }
 
-AdditionalSettings additionalSettings = AdditionalSettings(false, true);
+AdditionalSettings additionalSettings = AdditionalSettings(false, false);

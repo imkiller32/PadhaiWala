@@ -1,10 +1,10 @@
-# dummy
+# PadhaiWala
 
-A new Flutter project.
+Mobile Application for notes and documents sharing.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+This project is a starting point for the Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 

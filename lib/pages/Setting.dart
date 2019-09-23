@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:iitism2k16/themes/theme.dart';
 import 'package:iitism2k16/utils/module.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
+import 'package:provider/provider.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+//import 'dart:async';
 
-Future<bool> changeShared(pdftheme) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('PdfTheme', pdftheme);
-  return prefs.commit();
-}
+// Future<bool> changeShared(pdftheme) async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   prefs.setBool('PdfTheme', pdftheme);
+//   return prefs.commit();
+// }
 
 class Setting extends StatefulWidget {
   @override
@@ -17,9 +19,9 @@ class Setting extends StatefulWidget {
 class _SettingState extends State<Setting> {
   bool darkTheme = additionalSettings.getTheme();
   bool pdfTheme = additionalSettings.getPdfTheme();
-
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     return Scaffold(
         appBar: AppBar(
           title: Text('Setting'),
@@ -43,18 +45,23 @@ class _SettingState extends State<Setting> {
                     title: Text(
                       '   Dark Theme',
                       textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(
+                          color: (darkTheme == true)
+                              ? Colors.white
+                              : Colors.black),
                     ),
                     trailing: Switch(
-                      value: false,
-                      onChanged: null,
-                      // onChanged: (value) {
-                      //   setState(() {
-                      //     darkTheme = false;
-                      //     showDes('added soon');
-                      //     additionalSettings.setTheme(darkTheme);
-                      //   });
-                      // },
+                      value: darkTheme,
+                      onChanged: (value) {
+                        setState(() {
+                          additionalSettings.setTheme(value);
+                          darkTheme = value;
+                          if (value == true)
+                            _themeChanger.setTheme(ThemeData.dark());
+                          else
+                            _themeChanger.setTheme(ThemeData.light());
+                        });
+                      },
                     ),
                   ),
                   Divider(
@@ -64,16 +71,19 @@ class _SettingState extends State<Setting> {
                     title: Text(
                       '   Night mode for pdf',
                       textAlign: TextAlign.left,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(
+                          color: (darkTheme == true)
+                              ? Colors.white
+                              : Colors.black),
                     ),
                     trailing: Switch(
                       value: pdfTheme,
                       onChanged: (value) {
                         setState(() {
-                          changeShared(value).then((bool commited) {
-                            additionalSettings.setPdf(value);
-                            pdfTheme = value;
-                          });
+                          additionalSettings.setPdf(value);
+                          pdfTheme = value;
+                          // changeShared(value).then((bool commited) {
+                          // });
                         });
                       },
                     ),

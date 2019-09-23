@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iitism2k16/utils.dart';
+import 'package:iitism2k16/utils/module.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactUs extends StatelessWidget {
@@ -16,7 +17,7 @@ class ContactUs extends StatelessWidget {
 
 class ContactPage extends StatelessWidget {
   final email = 'iitism2k16@gmail.com';
-  final subject = 'Re:iitism2k16 1.1.0';
+  final subject = 'Re:PadhaiWala v1.1.3';
   final body = "";
   @override
   Widget build(BuildContext context) {
@@ -44,7 +45,10 @@ class ContactPage extends StatelessWidget {
                       Text(
                         '   Website',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),
@@ -65,13 +69,16 @@ class ContactPage extends StatelessWidget {
                       Text(
                         '   Facebook',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),
                 ),
                 onPressed: () {
-                  openUrl('https://www.facebook.com/iitism2k16', 'iitism2k16');
+                  openUrl('https://www.facebook.com/thepadhaiwala', 'iitism2k16');
                 },
               ),
               Divider(
@@ -86,7 +93,10 @@ class ContactPage extends StatelessWidget {
                       Text(
                         '   Instagram',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),
@@ -114,7 +124,10 @@ class ContactPage extends StatelessWidget {
                       Text(
                         '   Email Us',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),
@@ -135,7 +148,10 @@ class ContactPage extends StatelessWidget {
                       Text(
                         '   Location',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),

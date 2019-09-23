@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iitism2k16/utils.dart';
+import 'package:iitism2k16/utils/module.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 void main() => runApp(Help());
@@ -18,7 +19,7 @@ class Help extends StatelessWidget {
 
 class HelpPage extends StatelessWidget {
   final email = 'iitism2k16@gmail.com';
-  final subject = 'FeedBack regarding PadhaiWala 1.1.0';
+  final subject = 'FeedBack regarding PadhaiWala 1.1.3';
   final body = "";
   @override
   Widget build(BuildContext context) {
@@ -42,11 +43,17 @@ class HelpPage extends StatelessWidget {
                   width: double.infinity,
                   child: Row(
                     children: <Widget>[
-                      Icon(MdiIcons.laptopChromebook, color: Colors.black54),
+                      Icon(MdiIcons.laptopChromebook,
+                          color: (additionalSettings.getTheme() == true)
+                              ? Colors.grey
+                              : Colors.black54),
                       Text(
                         '   Privacy Policy',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),
@@ -68,7 +75,10 @@ class HelpPage extends StatelessWidget {
                       Text(
                         '   Help Centre',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),
@@ -89,7 +99,10 @@ class HelpPage extends StatelessWidget {
                       Text(
                         '   Feedback',
                         textAlign: TextAlign.left,
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(
+                            color: (additionalSettings.getTheme() == true)
+                                ? Colors.white
+                                : Colors.black),
                       ),
                     ],
                   ),
@@ -109,7 +122,7 @@ class HelpPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: 15.0),
               ),
               Text('PadhaiWala'),
-              Text('Version:1.1.2'),
+              Text('Version:1.1.3'),
               Padding(
                 padding: EdgeInsets.only(top: 35.0),
               ),

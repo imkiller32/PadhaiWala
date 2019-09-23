@@ -390,24 +390,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 fontSize: 14.0, /* fontStyle: FontStyle.italic */
               ),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.only(top: 0.0, left: 5.0),
-            //   child: Column(
-            //     children: <Widget>[
-            //       Text(
-            //         "PadhaiWala",
-            //         style: TextStyle(
-            //           fontSize: 19.0,
-            //         ),
-            //       ),
-            //       Text(
-            //         "#Be_Updated",
-            //         style:
-            //             TextStyle(fontSize: 14.0, fontStyle: FontStyle.italic),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
         actions: <Widget>[
@@ -712,8 +694,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                               data[index]
                                                                   ['date'],
                                                           style: TextStyle(
-                                                            color: Colors
-                                                                .blueAccent,
+                                                            color: (additionalSettings
+                                                                        .getTheme() ==
+                                                                    true)
+                                                                ? Colors
+                                                                    .greenAccent
+                                                                : Colors
+                                                                    .blueAccent,
                                                             fontWeight:
                                                                 FontWeight.bold,
                                                           ),
@@ -748,7 +735,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     icon: Icon(
                                                       MdiIcons
                                                           .informationVariant,
-                                                      color: Colors.black,
+                                                      color: (additionalSettings
+                                                                  .getTheme() ==
+                                                              true)
+                                                          ? Colors.white
+                                                          : Colors.black,
                                                     )),
                                               ),
                                               (progress[index] == null ||
@@ -767,7 +758,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       },
                                                       icon: Icon(
                                                         MdiIcons.download,
-                                                        color: Colors.black,
+                                                        color: (additionalSettings
+                                                                    .getTheme() ==
+                                                                true)
+                                                            ? Colors.white
+                                                            : Colors.black,
                                                       ),
                                                     )
                                                   : (progress[index] == 1)
@@ -780,7 +775,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                           },
                                                           icon: Icon(MdiIcons
                                                               .checkboxMarkedCircle),
-                                                          color: Colors.green,
+                                                          color: (additionalSettings
+                                                                      .getTheme() ==
+                                                                  true)
+                                                              ? Colors
+                                                                  .greenAccent
+                                                              : Colors.green,
                                                         )
                                                       : Row(
                                                           mainAxisAlignment:
@@ -799,8 +799,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   CircularProgressIndicator(
                                                                 strokeWidth:
                                                                     1.5,
-                                                                valueColor:
-                                                                    AlwaysStoppedAnimation(
+                                                                valueColor: (additionalSettings
+                                                                            .getTheme() ==
+                                                                        true)
+                                                                    ? AlwaysStoppedAnimation(
+                                                                        Colors
+                                                                            .greenAccent)
+                                                                    : AlwaysStoppedAnimation(
                                                                         Colors
                                                                             .blue),
                                                                 value: (progress[

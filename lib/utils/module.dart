@@ -17,31 +17,3 @@ class Module {
     return data;
   }
 }
-
-class AdditionalSettings {
-  bool darkTheme;
-  bool pdfDarkTheme;
-
-  AdditionalSettings(darkTheme, pdfDarkTheme) {
-    this.darkTheme = darkTheme;
-    this.pdfDarkTheme = pdfDarkTheme;
-  }
-
-  void setTheme(darkTheme) {
-    this.darkTheme = darkTheme;
-  }
-
-  void setPdf(pdfDarkTheme) {
-    this.pdfDarkTheme = pdfDarkTheme;
-  }
-
-  bool getTheme() {
-    return this.darkTheme;
-  }
-
-  bool getPdfTheme() {
-    return this.pdfDarkTheme;
-  }
-}
-
-AdditionalSettings additionalSettings = AdditionalSettings(false, false);

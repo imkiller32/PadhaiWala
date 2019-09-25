@@ -47,8 +47,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     //Icons.cloud_upload
   ];
   List data = [];
-  bool pdfTheme = additionalSettings.getPdfTheme();
-  bool darkTheme = additionalSettings.getTheme();
   List<double> liked = [];
   List<double> progress = [];
   List<double> bookmark = [];

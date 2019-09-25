@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:iitism2k16/utils/module.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -160,9 +159,7 @@ void showOptions(notes, context) {
       // return object of type Dialog
       return SingleChildScrollView(
         child: Theme(
-          data: (additionalSettings.getTheme())
-              ? ThemeData.dark()
-              : ThemeData.light(),
+          data: ThemeData.light(),
           child: AlertDialog(
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.0)),
@@ -171,9 +168,7 @@ void showOptions(notes, context) {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: (additionalSettings.getTheme())
-                    ? Colors.white70
-                    : Colors.black45,
+                color: Colors.black45,
               ),
             ),
             content: Container(

@@ -125,7 +125,7 @@ class HelpPage extends StatelessWidget {
                 padding: EdgeInsets.only(top: 15.0),
               ),
               Text('PadhaiWala'),
-              Text('Version:1.1.3'),
+              Text('Version:1.1.4'),
               Padding(
                 padding: EdgeInsets.only(top: 35.0),
               ),

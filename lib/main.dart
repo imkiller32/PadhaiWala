@@ -9,8 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<ThemeChanger>(
-        builder: (_) => ThemeChanger(ThemeData.light()),
-        child: new MaterialAppWithTheme());
+        builder: (_) => ThemeChanger(), child: new MaterialAppWithTheme());
   }
 }
 

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:iitism2k16/themes/theme.dart';
 import 'package:iitism2k16/utils.dart';
-import 'package:iitism2k16/utils/module.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(Help());
 
@@ -23,6 +24,7 @@ class HelpPage extends StatelessWidget {
   final body = "";
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     return SingleChildScrollView(
       child: Container(
         child: Padding(
@@ -44,16 +46,17 @@ class HelpPage extends StatelessWidget {
                   child: Row(
                     children: <Widget>[
                       Icon(MdiIcons.laptopChromebook,
-                          color: (additionalSettings.getTheme() == true)
+                          color: (_themeChanger.getTheme() == ThemeData.dark())
                               ? Colors.grey
                               : Colors.black54),
                       Text(
                         '   Privacy Policy',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
-                                ? Colors.white
-                                : Colors.black),
+                            color:
+                                (_themeChanger.getTheme() == ThemeData.dark())
+                                    ? Colors.white
+                                    : Colors.black),
                       ),
                     ],
                   ),
@@ -76,7 +79,7 @@ class HelpPage extends StatelessWidget {
                         '   Help Centre',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
+                            color: (_themeChanger.getTheme() == ThemeData.dark())
                                 ? Colors.white
                                 : Colors.black),
                       ),
@@ -100,7 +103,7 @@ class HelpPage extends StatelessWidget {
                         '   Feedback',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
+                            color: (_themeChanger.getTheme() == ThemeData.dark())
                                 ? Colors.white
                                 : Colors.black),
                       ),

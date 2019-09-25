@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iitism2k16/themes/theme.dart';
-import 'package:iitism2k16/utils/module.dart';
 import 'package:provider/provider.dart';
-//import 'package:shared_preferences/shared_preferences.dart';
-//import 'dart:async';
-
-// Future<bool> changeShared(pdftheme) async {
-//   SharedPreferences prefs = await SharedPreferences.getInstance();
-//   prefs.setBool('PdfTheme', pdftheme);
-//   return prefs.commit();
-// }
 
 class Setting extends StatefulWidget {
   @override
@@ -17,11 +8,11 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
-  bool darkTheme = additionalSettings.getTheme();
-  bool pdfTheme = additionalSettings.getPdfTheme();
   @override
   Widget build(BuildContext context) {
     ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
+    ThemeData data = _themeChanger.getTheme();
+    bool pdfTheme = _themeChanger.getPdfTheme();
     return Scaffold(
         appBar: AppBar(
           title: Text('Setting'),
@@ -46,21 +37,17 @@ class _SettingState extends State<Setting> {
                       '   Dark Theme',
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                          color: (darkTheme == true)
+                          color: (_themeChanger.getTheme() == ThemeData.dark())
                               ? Colors.white
                               : Colors.black),
                     ),
                     trailing: Switch(
-                      value: darkTheme,
-                      onChanged: (value) {
-                        setState(() {
-                          additionalSettings.setTheme(value);
-                          darkTheme = value;
-                          if (value == true)
-                            _themeChanger.setTheme(ThemeData.dark());
-                          else
-                            _themeChanger.setTheme(ThemeData.light());
-                        });
+                      value: data == ThemeData.dark(),
+                      onChanged: (value) async {
+                        if (value == true)
+                          _themeChanger.setTheme(ThemeData.dark());
+                        else
+                          _themeChanger.setTheme(ThemeData.light());
                       },
                     ),
                   ),
@@ -72,19 +59,14 @@ class _SettingState extends State<Setting> {
                       '   Night mode for pdf',
                       textAlign: TextAlign.left,
                       style: TextStyle(
-                          color: (darkTheme == true)
+                          color: (_themeChanger.getTheme() == ThemeData.dark())
                               ? Colors.white
                               : Colors.black),
                     ),
                     trailing: Switch(
                       value: pdfTheme,
-                      onChanged: (value) {
-                        setState(() {
-                          additionalSettings.setPdf(value);
-                          pdfTheme = value;
-                          // changeShared(value).then((bool commited) {
-                          // });
-                        });
+                      onChanged: (value) async {
+                        _themeChanger.setPdfTheme(value);
                       },
                     ),
                   ),

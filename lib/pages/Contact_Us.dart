@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:iitism2k16/themes/theme.dart';
 import 'package:iitism2k16/utils.dart';
-import 'package:iitism2k16/utils/module.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 class ContactUs extends StatelessWidget {
   @override
@@ -21,6 +22,7 @@ class ContactPage extends StatelessWidget {
   final body = "";
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     return SingleChildScrollView(
       child: Container(
         child: Padding(
@@ -46,9 +48,10 @@ class ContactPage extends StatelessWidget {
                         '   Website',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
-                                ? Colors.white
-                                : Colors.black),
+                            color:
+                                (_themeChanger.getTheme() == ThemeData.dark())
+                                    ? Colors.white
+                                    : Colors.black),
                       ),
                     ],
                   ),
@@ -70,15 +73,17 @@ class ContactPage extends StatelessWidget {
                         '   Facebook',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
-                                ? Colors.white
-                                : Colors.black),
+                            color:
+                                (_themeChanger.getTheme() == ThemeData.dark())
+                                    ? Colors.white
+                                    : Colors.black),
                       ),
                     ],
                   ),
                 ),
                 onPressed: () {
-                  openUrl('https://www.facebook.com/thepadhaiwala', 'iitism2k16');
+                  openUrl(
+                      'https://www.facebook.com/thepadhaiwala', 'iitism2k16');
                 },
               ),
               Divider(
@@ -94,9 +99,10 @@ class ContactPage extends StatelessWidget {
                         '   Instagram',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
-                                ? Colors.white
-                                : Colors.black),
+                            color:
+                                (_themeChanger.getTheme() == ThemeData.dark())
+                                    ? Colors.white
+                                    : Colors.black),
                       ),
                     ],
                   ),
@@ -125,9 +131,10 @@ class ContactPage extends StatelessWidget {
                         '   Email Us',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
-                                ? Colors.white
-                                : Colors.black),
+                            color:
+                                (_themeChanger.getTheme() == ThemeData.dark())
+                                    ? Colors.white
+                                    : Colors.black),
                       ),
                     ],
                   ),
@@ -149,9 +156,10 @@ class ContactPage extends StatelessWidget {
                         '   Location',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                            color: (additionalSettings.getTheme() == true)
-                                ? Colors.white
-                                : Colors.black),
+                            color:
+                                (_themeChanger.getTheme() == ThemeData.dark())
+                                    ? Colors.white
+                                    : Colors.black),
                       ),
                     ],
                   ),

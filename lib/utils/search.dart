@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:iitism2k16/themes/theme.dart';
 import 'package:iitism2k16/utils.dart';
 import 'package:iitism2k16/utils/module.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 
 class DataSearch extends SearchDelegate<String> {
   Module module = Module();
@@ -27,10 +29,11 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildLeading(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     return IconButton(
       icon: AnimatedIcon(
         icon: AnimatedIcons.menu_arrow,
-        color: (additionalSettings.getTheme() == true)
+        color: (_themeChanger.getTheme() == ThemeData.dark())
             ? Colors.greenAccent
             : Colors.blue,
         progress: transitionAnimation,
@@ -48,6 +51,7 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     final suggestionList = query.isEmpty
         ? ((data.length == 0) ? [] : data)
         : data.where((p) => p['name'].contains(query.toLowerCase())).toList();
@@ -80,7 +84,7 @@ class DataSearch extends SearchDelegate<String> {
                     .toString()
                     .toUpperCase(),
                 style: TextStyle(
-                    color: (additionalSettings.getTheme() == true)
+                    color: (_themeChanger.getTheme() == ThemeData.dark())
                         ? Colors.white
                         : Colors.black),
                 children: [
@@ -95,7 +99,7 @@ class DataSearch extends SearchDelegate<String> {
                       .toString()
                       .toUpperCase(),
                   style: TextStyle(
-                      color: (additionalSettings.getTheme() == true)
+                      color: (_themeChanger.getTheme() == ThemeData.dark())
                           ? Colors.greenAccent
                           : Colors.blue,
                       fontWeight: FontWeight.bold)),
@@ -107,7 +111,7 @@ class DataSearch extends SearchDelegate<String> {
                       .toString()
                       .toUpperCase(),
                   style: TextStyle(
-                      color: (additionalSettings.getTheme() == true)
+                      color: (_themeChanger.getTheme() == ThemeData.dark())
                           ? Colors.white
                           : Colors.black))
             ])),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iitism2k16/pages/Contact_Us.dart';
 import 'package:iitism2k16/pages/Help.dart';
 import 'package:iitism2k16/pages/Setting.dart';
+import 'package:iitism2k16/themes/theme.dart';
 //import 'package:iitism2k16/pages/Login.dart';
 
 import 'package:iitism2k16/utils/module.dart';
@@ -20,6 +21,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -132,9 +134,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         context,
         MaterialPageRoute(builder: (context) => Setting()),
       );
-      setState(() {
-        pdfTheme = additionalSettings.getPdfTheme();
-      });
     } else if (value == 'ContactUs')
       Navigator.push(
         context,
@@ -154,9 +153,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
       );
   }
 
-  Future<void> viewNotes(String link, String id, int index) async {
+  Future<void> viewNotes(String link, String id, int index, bool theme) async {
     String loc = await downloadNotes(link, id, index);
-    showFile(loc, additionalSettings.getPdfTheme());
+    showFile(loc, theme);
   }
 
   Future<String> downloadNotes(String link, String id, int index) async {
@@ -374,6 +373,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -558,7 +558,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       });
                       Scaffold.of(context).showSnackBar(SnackBar(
                         content: Text(
-                            data[index]['name'].toUpperCase() + ' Deleted '),
+                          data[index]['name'].toUpperCase() + ' Deleted ',
+                          style: TextStyle(color: Colors.white),
+                        ),
                         backgroundColor: Colors.black,
                         duration: Duration(seconds: 3),
                         action: SnackBarAction(
@@ -584,8 +586,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           children: <Widget>[
                             GestureDetector(
                               onTap: () {
-                                viewNotes(data[index]['link'],
-                                    data[index]['id'], index);
+                                viewNotes(
+                                    data[index]['link'],
+                                    data[index]['id'],
+                                    index,
+                                    _themeChanger.getPdfTheme());
                               },
                               onDoubleTap: () {
                                 showDes(data[index]['name']);
@@ -694,9 +699,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                               data[index]
                                                                   ['date'],
                                                           style: TextStyle(
-                                                            color: (additionalSettings
+                                                            color: (_themeChanger
                                                                         .getTheme() ==
-                                                                    true)
+                                                                    ThemeData
+                                                                        .dark())
                                                                 ? Colors
                                                                     .greenAccent
                                                                 : Colors
@@ -735,9 +741,9 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                     icon: Icon(
                                                       MdiIcons
                                                           .informationVariant,
-                                                      color: (additionalSettings
+                                                      color: (_themeChanger
                                                                   .getTheme() ==
-                                                              true)
+                                                              ThemeData.dark())
                                                           ? Colors.white
                                                           : Colors.black,
                                                     )),
@@ -758,9 +764,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                       },
                                                       icon: Icon(
                                                         MdiIcons.download,
-                                                        color: (additionalSettings
+                                                        color: (_themeChanger
                                                                     .getTheme() ==
-                                                                true)
+                                                                ThemeData
+                                                                    .dark())
                                                             ? Colors.white
                                                             : Colors.black,
                                                       ),
@@ -775,9 +782,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                           },
                                                           icon: Icon(MdiIcons
                                                               .checkboxMarkedCircle),
-                                                          color: (additionalSettings
+                                                          color: (_themeChanger
                                                                       .getTheme() ==
-                                                                  true)
+                                                                  ThemeData
+                                                                      .dark())
                                                               ? Colors
                                                                   .greenAccent
                                                               : Colors.green,
@@ -799,9 +807,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                                                   CircularProgressIndicator(
                                                                 strokeWidth:
                                                                     1.5,
-                                                                valueColor: (additionalSettings
+                                                                valueColor: (_themeChanger
                                                                             .getTheme() ==
-                                                                        true)
+                                                                        ThemeData
+                                                                            .dark())
                                                                     ? AlwaysStoppedAnimation(
                                                                         Colors
                                                                             .greenAccent)

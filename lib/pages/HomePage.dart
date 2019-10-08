@@ -13,7 +13,6 @@ import 'package:iitism2k16/utils/share.dart';
 
 import 'package:iitism2k16/utils.dart';
 import 'dart:async';
-import 'dart:math' as math;
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:connectivity/connectivity.dart';
@@ -22,6 +21,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+
+import 'package:iitism2k16/pages/Filter.dart';
+import 'package:iitism2k16/pages/TelephoneDirectory.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -38,14 +40,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final String playStoreLink =
       "https://play.google.com/store/apps/details?id=com.imkiller.padhaiwala&hl=en";
   final String upload = "https://liveism.xyz/upload.php";
-  AnimationController _controller;
+  //AnimationController _controller;
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   int selectedBar = 0;
-  static const List<IconData> icons = const [
-    MdiIcons.googlePlay,
-    Icons.share
-    //Icons.cloud_upload
-  ];
+
   List data = [];
   List<double> liked = [];
   List<double> progress = [];
@@ -55,10 +53,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     module = Module();
-    _controller = new AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
+    // _controller = new AnimationController(
+    //   vsync: this,
+    //   duration: const Duration(milliseconds: 500),
+    // );
     super.initState();
     connectivity = new Connectivity();
     subscription =
@@ -127,28 +125,47 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void jump(String value) {
-    if (value == 'Setting') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Setting()),
-      );
-    } else if (value == 'ContactUs')
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => ContactUs()),
-      );
-    else if (value == 'Help')
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Help()),
-      );
-    else if (value == 'RateUs')
-      openUrl(playStoreLink, 'RateUs');
-    else if (value == 'login')
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => Help()), //Login()
-      );
+    switch (value) {
+      case 'Setting':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Setting()),
+        );
+        break;
+      case 'ContactUs':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ContactUs()),
+        );
+        break;
+      case 'Help':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Help()),
+        );
+        break;
+      case 'RateUs':
+        openUrl(playStoreLink, 'RateUs');
+        break;
+      case 'Invite':
+        onShareTap(context, playStoreLink);
+        break;
+      case 'Upload':
+        openUrl(upload, 'Upload');
+        break;
+      case 'TD':
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => TelephoneDirectory()),
+        );
+        break;
+      case 'login': //login
+      default:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Help()),
+        );
+    }
   }
 
   Future<void> viewNotes(String link, String id, int index, bool theme) async {
@@ -187,11 +204,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   showDeleteDialog(BuildContext context, index) {
+    ThemeChanger _themeChanger = Provider.of<ThemeChanger>(context);
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return Theme(
-            data: ThemeData.dark(),
+            data: _themeChanger.getTheme(), //ThemeData.dark(),
             child: new AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12.0)),
@@ -234,7 +252,10 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           'CANCEL',
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: Colors.white,
+                            color:
+                                (_themeChanger.getTheme() == ThemeData.dark())
+                                    ? Colors.white
+                                    : Colors.blueAccent,
                             fontSize: 15.0,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1.3,
@@ -427,82 +448,120 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                   value: 'Help',
                 ),
-                PopupMenuItem(
-                  child: Row(
-                    children: <Widget>[
-                      Icon(MdiIcons.googlePlay),
-                      Text('  Rate Us'),
-                    ],
-                  ),
-                  value: 'RateUs',
-                ),
               ];
             },
             onSelected: jump,
           ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: new Column(
-        mainAxisSize: MainAxisSize.min,
-        children: new List.generate(icons.length, (int index) {
-          Widget child = new Container(
-            height: 60.0,
-            width: 56.0,
-            alignment: FractionalOffset.topCenter,
-            padding: EdgeInsets.all(4.0),
-            child: new ScaleTransition(
-              scale: new CurvedAnimation(
-                parent: _controller,
-                curve: new Interval(0.0, 1.0 - index / icons.length / 2.0,
-                    curve: Curves.easeOut),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Image.asset(
+                    'assets/iitism.png',
+                    fit: BoxFit.contain,
+                    height: 50.0,
+                  ),
+                  Text(
+                    "#Be_Updated",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white, /* fontStyle: FontStyle.italic */
+                    ),
+                  ),
+                  Text(
+                    "v1.1.4",
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.white, /* fontStyle: FontStyle.italic */
+                    ),
+                  ),
+                ],
               ),
-              child: new FloatingActionButton(
-                heroTag: null,
-                mini: false,
-                backgroundColor: Colors.black,
-                child: new Icon(
-                  icons[index],
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (index == 0) {
-                    openUrl(playStoreLink, 'RateUs');
-                  } else if (index == 1) {
-                    onShareTap(context, playStoreLink);
-                  } else {
-                    openUrl(upload, 'upload');
-                  }
-                },
+              decoration: BoxDecoration(
+                color: (_themeChanger.getTheme() == ThemeData.dark())
+                    ? Colors.black12
+                    : Colors.blue,
               ),
             ),
-          );
-          return child;
-        }).toList()
-          ..add(
-            new FloatingActionButton(
-              heroTag: null,
-              child: new AnimatedBuilder(
-                animation: _controller,
-                builder: (BuildContext context, Widget child) {
-                  return new Transform(
-                    transform: new Matrix4.rotationZ(
-                        _controller.value * 0.5 * math.pi),
-                    alignment: FractionalOffset.center,
-                    child: new Icon(
-                        _controller.isDismissed ? Icons.add : Icons.close),
-                  );
-                },
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.cloud_upload),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                  ),
+                  Text('Upload'),
+                ],
               ),
-              onPressed: () {
-                if (_controller.isDismissed) {
-                  _controller.forward();
-                } else {
-                  _controller.reverse();
-                }
+              onTap: () {
+                jump('Upload');
+                Navigator.pop(context);
               },
             ),
-          ),
+            Divider(),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.contact_phone),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                  ),
+                  Text('Telephone Directory'),
+                ],
+              ),
+              onTap: () {
+                jump('TD');
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(Icons.share),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                  ),
+                  Text('Invite'),
+                ],
+              ),
+              onTap: () {
+                jump('Invite');
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              title: Row(
+                children: <Widget>[
+                  Icon(MdiIcons.googlePlay),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(25, 0, 0, 0),
+                  ),
+                  Text('Rate Us'),
+                ],
+              ),
+              onTap: () {
+                jump('RateUs');
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Filter()));
+        },
+        heroTag: "Filter",
+        child: Icon(Icons.filter_list),
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: navigationJump,
@@ -511,7 +570,6 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
           BottomNavigationBarItem(
               icon: Icon(Icons.file_download), title: Text('Downloads')),
-
           //BottomNavigationBarItem(icon: Icon(Icons.person), title: Text('Me')),
         ],
       ),
@@ -520,23 +578,40 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SpinKitThreeBounce(
-                  color: Colors.blue,
-                  size: 25,
-                ),
+                (bookmarkTab == false)
+                    ? SpinKitThreeBounce(
+                        color: Colors.blue,
+                        size: 25,
+                      )
+                    : IconButton(
+                        icon: Icon(MdiIcons.emoticonSadOutline),
+                        iconSize: 40,
+                        onPressed: () {},
+                      ),
                 Padding(
                   padding: EdgeInsets.only(top: 10),
                 ),
-                Text(
-                  "Loading...",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                    fontSize: 20,
-                  ),
-                ),
+                (bookmarkTab == false)
+                    ? Text(
+                        "Loading...",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                          fontSize: 20,
+                        ),
+                      )
+                    : Text(
+                        "Oops! Unable to fetch Download",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 1.5,
+                          fontSize: 20,
+                        ),
+                      ),
               ],
             ))
           : RefreshIndicator(
